@@ -10,7 +10,11 @@ import co.aikar.taskchain.TaskChainFactory;
 import lombok.Getter;
 import lombok.Setter;
 import net.aleiv.core.paper.commands.GlobalCMD;
+import net.aleiv.core.paper.listeners.EasyListener;
 import net.aleiv.core.paper.listeners.GlobalListener;
+import net.aleiv.core.paper.listeners.HardListener;
+import net.aleiv.core.paper.listeners.LobbyListener;
+import net.aleiv.core.paper.listeners.MediumListener;
 import net.aleiv.core.paper.utilities.fastInv.FastInvManager;
 
 public class Core extends JavaPlugin {
@@ -33,6 +37,10 @@ public class Core extends JavaPlugin {
         //LISTENERS
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new LobbyListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new EasyListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new MediumListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new HardListener(this), this);
 
 
         //COMMANDS
