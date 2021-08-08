@@ -1,8 +1,8 @@
-package net.aleiv.core.paper.listeners;
+package me.aleiv.core.paper.listeners;
 
 import org.bukkit.event.Listener;
 
-import net.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Core;
 
 public class MediumListener implements Listener{
     

@@ -1,25 +1,25 @@
-package net.aleiv.core.paper.events;
+package me.aleiv.core.paper.events;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
 
-public class GameTickEvent extends Event {
+public class PointsEvent extends Event {
     
     private static final @Getter HandlerList HandlerList = new HandlerList();
     @SuppressWarnings({"java:S116", "java:S1170"})
     private final @Getter HandlerList Handlers = HandlerList;
-    private final @Getter int second;
+    private final @Getter int points;
 
 
-    public GameTickEvent(int second, boolean async) {
+    public PointsEvent(int points, boolean async) {
         super(async);
-        this.second = second;
+        this.points = points;
     }
 
-    public GameTickEvent(int second) {
-        this(second, false);
+    public PointsEvent(int points) {
+        this(points, false);
     }
 
 }

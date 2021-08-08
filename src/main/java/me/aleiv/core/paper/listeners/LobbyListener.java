@@ -1,4 +1,4 @@
-package net.aleiv.core.paper.listeners;
+package me.aleiv.core.paper.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 
-import net.aleiv.core.paper.Core;
-import net.aleiv.core.paper.Game.GameStage;
+import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.GameStage;
 import net.md_5.bungee.api.ChatColor;
 
 public class LobbyListener implements Listener {
