@@ -4,22 +4,25 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import lombok.Getter;
+import me.aleiv.core.paper.Game.TeamColor;
 
-public class PointsEvent extends Event {
+public class addPointsEvent extends Event {
     
     private static final @Getter HandlerList HandlerList = new HandlerList();
     @SuppressWarnings({"java:S116", "java:S1170"})
     private final @Getter HandlerList Handlers = HandlerList;
     private final @Getter int points;
+    private final @Getter TeamColor teamColor;
 
 
-    public PointsEvent(int points, boolean async) {
+    public addPointsEvent(int points, TeamColor teamColor, boolean async) {
         super(async);
         this.points = points;
+        this.teamColor = teamColor;
     }
 
-    public PointsEvent(int points) {
-        this(points, false);
+    public addPointsEvent(int points, TeamColor teamColor) {
+        this(points, teamColor, false);
     }
 
 }

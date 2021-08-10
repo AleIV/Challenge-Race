@@ -12,10 +12,14 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import co.aikar.taskchain.TaskChain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import me.aleiv.core.paper.events.GameTickEvent;
+import me.aleiv.core.paper.events.addPointsEvent;
+import me.aleiv.core.paper.events.removePointsEvent;
 import me.aleiv.core.paper.objects.Challenge;
+import me.aleiv.core.paper.objects.ItemCode;
 import me.aleiv.core.paper.objects.Team;
 
 @Data
@@ -35,6 +39,8 @@ public class Game extends BukkitRunnable {
 
     BossBar bossBar;
 
+    String animation = "";
+
     String bar = Character.toString('\uE000');
     String red = Character.toString('\uE001');
     String blue = Character.toString('\uE002');
@@ -46,73 +52,11 @@ public class Game extends BukkitRunnable {
     int fix = 35;
     int middleFix = 0;
 
-    public void updateBossBar(){
-        var blueTeam = teams.get(TeamColor.BLUE);
-        var redTeam = teams.get(TeamColor.RED);
+    List<ItemCode> redAnimation = new ArrayList<>();
+    List<ItemCode> blueAnimation = new ArrayList<>();
+    List<ItemCode> trophyAnimation = new ArrayList<>();
 
-        var rP = redTeam.getPoints();
-        var bP = blueTeam.getPoints();
-        var negRed = rP == 0 ? "" : getN(rP);
-        var negBlue = bP == 0 ? "" : getN(bP);
-
-        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank + getN(blueBlank) + blank + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
-    }
-
-    public void addPoint(TeamColor teamColor){
-        var redTeam = teams.get(TeamColor.RED);
-        var blueTeam = teams.get(TeamColor.BLUE);
-
-        var Btotal = blueTeam.getPoints();
-        var Rtotal = redTeam.getPoints();
-
-        if(teamColor == TeamColor.BLUE){
-
-            //ADD BLUE
-            if(Btotal-1 < -114) return;
-
-            blueTeam.removePoint();
-            removeFix();
-            
-        }else if(teamColor == TeamColor.RED ){
-
-            //ADD RED
-            if(Rtotal+1 > 114) return;
-
-            redTeam.addPoint();
-            removeMFix();
-
-        }
-
-        updateBossBar();
-
-    }
-
-    public void removePoint(TeamColor teamColor){
-        var redTeam = teams.get(TeamColor.RED);
-        var blueTeam = teams.get(TeamColor.BLUE);
-
-        var Btotal = blueTeam.getPoints();
-        var Rtotal = redTeam.getPoints();
-
-        if(teamColor == TeamColor.BLUE){
-
-            //REMOVE BLUE
-            if(Btotal+1 > 0) return;
-
-            blueTeam.addPoint();
-            addFix();
-
-        }else if(teamColor == TeamColor.RED){
-
-            //REMOVE RED
-            if(Rtotal-1 < 0) return;
-
-            redTeam.removePoint();
-            addMFix();
-        }
-
-        updateBossBar();
-    }
+    int currentTrophy = -1;
 
     public Game(Core instance) {
         this.instance = instance;
@@ -162,9 +106,110 @@ public class Game extends BukkitRunnable {
         negativeSpaces.put(512, Character.toString('\uF82E'));
         negativeSpaces.put(1024, Character.toString('\uF82F'));
         
+        redAnimation.add(new ItemCode('\uE010'));
+        redAnimation.add(new ItemCode('\uE011'));
+        redAnimation.add(new ItemCode('\uE012'));
+        redAnimation.add(new ItemCode('\uE013'));
+
+        blueAnimation.add(new ItemCode('\uE014'));
+        blueAnimation.add(new ItemCode('\uE015'));
+        blueAnimation.add(new ItemCode('\uE016'));
+        blueAnimation.add(new ItemCode('\uE017'));
+
+        trophyAnimation.add(new ItemCode('\uE020'));
+        trophyAnimation.add(new ItemCode('\uE021'));
+        trophyAnimation.add(new ItemCode('\uE022'));
+        trophyAnimation.add(new ItemCode('\uE023'));
+        trophyAnimation.add(new ItemCode('\uE024'));
+        trophyAnimation.add(new ItemCode('\uE025'));
+        trophyAnimation.add(new ItemCode('\uE026'));
+        trophyAnimation.add(new ItemCode('\uE027'));
+        trophyAnimation.add(new ItemCode('\uE028'));
+        trophyAnimation.add(new ItemCode('\uE029'));
+        trophyAnimation.add(new ItemCode('\uE030'));
+        trophyAnimation.add(new ItemCode('\uE031'));
+        trophyAnimation.add(new ItemCode('\uE032'));
+        trophyAnimation.add(new ItemCode('\uE033'));
+        trophyAnimation.add(new ItemCode('\uE034'));
+
         //CHALLENGES
 
         challenges.put("PESCAR", new Challenge("PESCAR", Difficulty.EASY, "PESCA UN PEZ"));
+    }
+
+    public void updateBossBar(){
+        var blueTeam = teams.get(TeamColor.BLUE);
+        var redTeam = teams.get(TeamColor.RED);
+
+        var rP = redTeam.getPoints();
+        var bP = blueTeam.getPoints();
+        var negRed = rP == 0 ? "" : getN(rP);
+        var negBlue = bP == 0 ? "" : getN(bP);
+
+        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank + getN(blueBlank) + blank + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
+    }
+
+    public void addPoint(TeamColor teamColor){
+        var redTeam = teams.get(TeamColor.RED);
+        var blueTeam = teams.get(TeamColor.BLUE);
+
+        var Btotal = blueTeam.getPoints();
+        var Rtotal = redTeam.getPoints();
+
+        if(teamColor == TeamColor.BLUE){
+
+            //ADD BLUE
+            if(Btotal-1 < -114) return;
+
+            blueTeam.removePoint();
+            removeFix();
+
+            Bukkit.getPluginManager().callEvent(new addPointsEvent(1, TeamColor.BLUE));
+            
+        }else if(teamColor == TeamColor.RED ){
+
+            //ADD RED
+            if(Rtotal+1 > 114) return;
+
+            redTeam.addPoint();
+            removeMFix();
+
+            Bukkit.getPluginManager().callEvent(new addPointsEvent(1, TeamColor.RED));
+        }
+
+        updateBossBar();
+
+    }
+
+    public void removePoint(TeamColor teamColor){
+        var redTeam = teams.get(TeamColor.RED);
+        var blueTeam = teams.get(TeamColor.BLUE);
+
+        var Btotal = blueTeam.getPoints();
+        var Rtotal = redTeam.getPoints();
+
+        if(teamColor == TeamColor.BLUE){
+
+            //REMOVE BLUE
+            if(Btotal+1 > 0) return;
+
+            blueTeam.addPoint();
+            addFix();
+
+            Bukkit.getPluginManager().callEvent(new removePointsEvent(1, TeamColor.BLUE));
+
+        }else if(teamColor == TeamColor.RED){
+
+            //REMOVE RED
+            if(Rtotal-1 < 0) return;
+
+            redTeam.removePoint();
+            addMFix();
+
+            Bukkit.getPluginManager().callEvent(new removePointsEvent(1, TeamColor.RED));
+        }
+
+        updateBossBar();
     }
 
     public int getMax(int i){
@@ -226,6 +271,33 @@ public class Game extends BukkitRunnable {
     public void removeMFix(){
         this.middleFix--;
     }
+
+    public void animation(int frames, List<ItemCode> animationList){
+
+        var chain = Core.newChain();
+        
+        animationList.forEach(an ->{
+            chain.delay(frames).sync(() -> {
+
+                var anim = Character.toString(an.getCode());
+                animation = anim;
+
+                Bukkit.getOnlinePlayers().forEach(p->{
+                    if(currentTrophy == -1){
+                        p.sendTitle(animation, "", 0, 60, 40);
+                    }else{
+                        var trophy = Character.toString(trophyAnimation.get(currentTrophy).getCode());
+                        p.sendTitle(animation + trophy, "", 0, 60, 40);
+                    }
+                   
+                });
+
+            });
+        });
+    
+        chain.sync(TaskChain::abort).execute();
+    }
+
 
     @Override
     public void run() {
