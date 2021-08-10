@@ -284,10 +284,10 @@ public class Game extends BukkitRunnable {
 
                 Bukkit.getOnlinePlayers().forEach(p->{
                     if(currentTrophy == -1){
-                        p.sendTitle(animation, "", 0, 60, 40);
+                        p.sendTitle(animation, "", 0, 10, 40);
                     }else{
                         var trophy = Character.toString(trophyAnimation.get(currentTrophy).getCode());
-                        p.sendTitle(animation + trophy, "", 0, 60, 40);
+                        p.sendTitle(animation + trophy, "", 0, 10, 40);
                     }
                    
                 });
