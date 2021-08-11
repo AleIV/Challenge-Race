@@ -44,7 +44,9 @@ public class Game extends BukkitRunnable {
     String bar = Character.toString('\uE000');
     String red = Character.toString('\uE001');
     String blue = Character.toString('\uE002');
-    String blank = Character.toString('\uE003');
+    String blank1 = Character.toString('\uE003');
+    String blank2 = Character.toString('\uE009');
+    String trophyBlank = Character.toString('\uE008');
     int blueBlank = 259;
     int redBlank = -293;
     int bluePerm = 259;
@@ -52,11 +54,11 @@ public class Game extends BukkitRunnable {
     int fix = 35;
     int middleFix = 0;
 
+    int test = 0;
+
     List<ItemCode> redAnimation = new ArrayList<>();
     List<ItemCode> blueAnimation = new ArrayList<>();
-    List<ItemCode> trophyAnimation = new ArrayList<>();
-
-    int currentTrophy = -1;
+    List<ItemCode> countDownAnimation = new ArrayList<>();
 
     public Game(Core instance) {
         this.instance = instance;
@@ -65,7 +67,7 @@ public class Game extends BukkitRunnable {
         teams.put(TeamColor.RED, new Team(TeamColor.RED));
         teams.put(TeamColor.BLUE, new Team(TeamColor.BLUE));
 
-        gameStage = GameStage.INGAME;
+        gameStage = GameStage.LOBBY;
 
         bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), "BOSSBAR", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -116,21 +118,50 @@ public class Game extends BukkitRunnable {
         blueAnimation.add(new ItemCode('\uE016'));
         blueAnimation.add(new ItemCode('\uE017'));
 
-        trophyAnimation.add(new ItemCode('\uE020'));
-        trophyAnimation.add(new ItemCode('\uE021'));
-        trophyAnimation.add(new ItemCode('\uE022'));
-        trophyAnimation.add(new ItemCode('\uE023'));
-        trophyAnimation.add(new ItemCode('\uE024'));
-        trophyAnimation.add(new ItemCode('\uE025'));
-        trophyAnimation.add(new ItemCode('\uE026'));
-        trophyAnimation.add(new ItemCode('\uE027'));
-        trophyAnimation.add(new ItemCode('\uE028'));
-        trophyAnimation.add(new ItemCode('\uE029'));
-        trophyAnimation.add(new ItemCode('\uE030'));
-        trophyAnimation.add(new ItemCode('\uE031'));
-        trophyAnimation.add(new ItemCode('\uE032'));
-        trophyAnimation.add(new ItemCode('\uE033'));
-        trophyAnimation.add(new ItemCode('\uE034'));
+        countDownAnimation.add(new ItemCode('\uE050'));
+        countDownAnimation.add(new ItemCode('\uE051'));
+        countDownAnimation.add(new ItemCode('\uE052'));
+        countDownAnimation.add(new ItemCode('\uE053'));
+        countDownAnimation.add(new ItemCode('\uE054'));
+        countDownAnimation.add(new ItemCode('\uE055'));
+        countDownAnimation.add(new ItemCode('\uE056'));
+        countDownAnimation.add(new ItemCode('\uE057'));
+        countDownAnimation.add(new ItemCode('\uE058'));
+        countDownAnimation.add(new ItemCode('\uE059'));
+        countDownAnimation.add(new ItemCode('\uE060'));
+        countDownAnimation.add(new ItemCode('\uE061'));
+        countDownAnimation.add(new ItemCode('\uE062'));
+        countDownAnimation.add(new ItemCode('\uE063'));
+        countDownAnimation.add(new ItemCode('\uE064'));
+        countDownAnimation.add(new ItemCode('\uE065'));
+        countDownAnimation.add(new ItemCode('\uE066'));
+        countDownAnimation.add(new ItemCode('\uE067'));
+        countDownAnimation.add(new ItemCode('\uE068'));
+        countDownAnimation.add(new ItemCode('\uE069'));
+        countDownAnimation.add(new ItemCode('\uE070'));
+        countDownAnimation.add(new ItemCode('\uE071'));
+        countDownAnimation.add(new ItemCode('\uE072'));
+        countDownAnimation.add(new ItemCode('\uE073'));
+        countDownAnimation.add(new ItemCode('\uE074'));
+        countDownAnimation.add(new ItemCode('\uE075'));
+        countDownAnimation.add(new ItemCode('\uE076'));
+        countDownAnimation.add(new ItemCode('\uE077'));
+        countDownAnimation.add(new ItemCode('\uE078'));
+        countDownAnimation.add(new ItemCode('\uE079'));
+        countDownAnimation.add(new ItemCode('\uE080'));
+        countDownAnimation.add(new ItemCode('\uE081'));
+        countDownAnimation.add(new ItemCode('\uE082'));
+        countDownAnimation.add(new ItemCode('\uE083'));
+        countDownAnimation.add(new ItemCode('\uE084'));
+        countDownAnimation.add(new ItemCode('\uE085'));
+        countDownAnimation.add(new ItemCode('\uE086'));
+        countDownAnimation.add(new ItemCode('\uE087'));
+        countDownAnimation.add(new ItemCode('\uE088'));
+        countDownAnimation.add(new ItemCode('\uE089'));
+        countDownAnimation.add(new ItemCode('\uE090'));
+        countDownAnimation.add(new ItemCode('\uE091'));
+
+
 
         //CHALLENGES
 
@@ -146,7 +177,7 @@ public class Game extends BukkitRunnable {
         var negRed = rP == 0 ? "" : getN(rP);
         var negBlue = bP == 0 ? "" : getN(bP);
 
-        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank + getN(blueBlank) + blank + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
+        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank1 + getN(blueBlank) + blank2 + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
     }
 
     public void addPoint(TeamColor teamColor){
@@ -275,7 +306,7 @@ public class Game extends BukkitRunnable {
     public void animation(int frames, List<ItemCode> animationList){
 
         var chain = Core.newChain();
-        
+
         animationList.forEach(an ->{
             chain.delay(frames).sync(() -> {
 
@@ -283,12 +314,7 @@ public class Game extends BukkitRunnable {
                 animation = anim;
 
                 Bukkit.getOnlinePlayers().forEach(p->{
-                    if(currentTrophy == -1){
-                        p.sendTitle(animation, "", 0, 10, 40);
-                    }else{
-                        var trophy = Character.toString(trophyAnimation.get(currentTrophy).getCode());
-                        p.sendTitle(animation + trophy, "", 0, 10, 40);
-                    }
+                    p.sendTitle(animation, "", 0, 20, 20);
                    
                 });
 
@@ -296,6 +322,7 @@ public class Game extends BukkitRunnable {
         });
     
         chain.sync(TaskChain::abort).execute();
+
     }
 
 

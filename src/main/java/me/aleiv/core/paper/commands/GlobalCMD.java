@@ -7,6 +7,7 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.taskchain.TaskChain;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.TeamColor;
@@ -53,8 +54,31 @@ public class GlobalCMD extends BaseCommand {
     public void fix(CommandSender sender, Integer i) {
 
         var game = instance.getGame();
-        game.setFix(i);
-        game.updateBossBar();
+        game.setTest(i);
+
+    }
+
+    @Subcommand("animation")
+    public void animation(CommandSender sender, Integer i) {
+
+        var game = instance.getGame();
+
+        var chain = Core.newChain();
+        
+        game.getCountDownAnimation().forEach(an ->{
+            chain.delay(i).sync(() -> {
+
+                var anim = Character.toString(an.getCode());
+
+                Bukkit.getOnlinePlayers().forEach(p->{
+                    p.sendTitle(anim, "", 0, 10, 40);
+                   
+                });
+
+            });
+        });
+    
+        chain.sync(TaskChain::abort).execute();
 
 
     }

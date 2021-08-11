@@ -7,7 +7,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.GameStage;
@@ -38,16 +37,6 @@ public class LobbyListener implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         var player = e.getPlayer();
-        var game = instance.getGame();
-        if (game.getGameStage() != GameStage.INGAME) {
-            e.setCancelled(true);
-            player.sendActionBar(notInGameMSG);
-        }
-    }
-
-    @EventHandler
-    public void onInventory(InventoryOpenEvent e) {
-        var player = (Player) e.getPlayer();
         var game = instance.getGame();
         if (game.getGameStage() != GameStage.INGAME) {
             e.setCancelled(true);
