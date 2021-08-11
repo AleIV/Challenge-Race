@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.aleiv.core.paper.Core;
@@ -173,6 +174,8 @@ public class GlobalListener implements Listener {
 
         });
     }
+
+    
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {

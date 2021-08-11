@@ -67,7 +67,7 @@ public class Game extends BukkitRunnable {
         teams.put(TeamColor.RED, new Team(TeamColor.RED));
         teams.put(TeamColor.BLUE, new Team(TeamColor.BLUE));
 
-        gameStage = GameStage.LOBBY;
+        gameStage = GameStage.INGAME;
 
         bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), "BOSSBAR", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
