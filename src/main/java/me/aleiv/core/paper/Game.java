@@ -30,7 +30,7 @@ public class Game extends BukkitRunnable {
     long gameTime = 0;
     long startTime = 0;
 
-    HashMap<String, Challenge> challenges = new HashMap<>();
+    HashMap<ChallengeType, Challenge> challenges = new HashMap<>();
     HashMap<TeamColor, Team> teams = new HashMap<>();
 
     HashMap<Integer, String> negativeSpaces = new HashMap<>();
@@ -60,6 +60,12 @@ public class Game extends BukkitRunnable {
     List<ItemCode> blueAnimation = new ArrayList<>();
     List<ItemCode> countDownAnimation = new ArrayList<>();
 
+
+    public enum ChallengeType {
+        FISH, 
+        JUMP_BED
+    }
+
     public Game(Core instance) {
         this.instance = instance;
         this.startTime = System.currentTimeMillis();
@@ -72,100 +78,13 @@ public class Game extends BukkitRunnable {
         bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), "BOSSBAR", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
 
-        //NEGATIVE SPACES
-
-        negativeSpaces.put(-1, Character.toString('\uF801'));
-        negativeSpaces.put(-2, Character.toString('\uF802'));
-        negativeSpaces.put(-3, Character.toString('\uF803'));
-        negativeSpaces.put(-4, Character.toString('\uF804'));
-        negativeSpaces.put(-5, Character.toString('\uF805'));
-        negativeSpaces.put(-6, Character.toString('\uF806'));
-        negativeSpaces.put(-7, Character.toString('\uF807'));
-        negativeSpaces.put(-8, Character.toString('\uF808'));
-
-        negativeSpaces.put(-16, Character.toString('\uF809'));
-        negativeSpaces.put(-32, Character.toString('\uF80A'));
-        negativeSpaces.put(-64, Character.toString('\uF80B'));
-        negativeSpaces.put(-128, Character.toString('\uF80C'));
-        negativeSpaces.put(-256, Character.toString('\uF80D'));
-        negativeSpaces.put(-512, Character.toString('\uF80E'));
-        negativeSpaces.put(-1024, Character.toString('\uF80F'));
-
-        negativeSpaces.put(1, Character.toString('\uF821'));
-        negativeSpaces.put(2, Character.toString('\uF822'));
-        negativeSpaces.put(3, Character.toString('\uF823'));
-        negativeSpaces.put(4, Character.toString('\uF824'));
-        negativeSpaces.put(5, Character.toString('\uF825'));
-        negativeSpaces.put(6, Character.toString('\uF826'));
-        negativeSpaces.put(7, Character.toString('\uF827'));
-        negativeSpaces.put(8, Character.toString('\uF828'));
-
-        negativeSpaces.put(16, Character.toString('\uF829'));
-        negativeSpaces.put(32, Character.toString('\uF82A'));
-        negativeSpaces.put(64, Character.toString('\uF82B'));
-        negativeSpaces.put(128, Character.toString('\uF82C'));
-        negativeSpaces.put(256, Character.toString('\uF82D'));
-        negativeSpaces.put(512, Character.toString('\uF82E'));
-        negativeSpaces.put(1024, Character.toString('\uF82F'));
-        
-        redAnimation.add(new ItemCode('\uE010'));
-        redAnimation.add(new ItemCode('\uE011'));
-        redAnimation.add(new ItemCode('\uE012'));
-        redAnimation.add(new ItemCode('\uE013'));
-
-        blueAnimation.add(new ItemCode('\uE014'));
-        blueAnimation.add(new ItemCode('\uE015'));
-        blueAnimation.add(new ItemCode('\uE016'));
-        blueAnimation.add(new ItemCode('\uE017'));
-
-        countDownAnimation.add(new ItemCode('\uE050'));
-        countDownAnimation.add(new ItemCode('\uE051'));
-        countDownAnimation.add(new ItemCode('\uE052'));
-        countDownAnimation.add(new ItemCode('\uE053'));
-        countDownAnimation.add(new ItemCode('\uE054'));
-        countDownAnimation.add(new ItemCode('\uE055'));
-        countDownAnimation.add(new ItemCode('\uE056'));
-        countDownAnimation.add(new ItemCode('\uE057'));
-        countDownAnimation.add(new ItemCode('\uE058'));
-        countDownAnimation.add(new ItemCode('\uE059'));
-        countDownAnimation.add(new ItemCode('\uE060'));
-        countDownAnimation.add(new ItemCode('\uE061'));
-        countDownAnimation.add(new ItemCode('\uE062'));
-        countDownAnimation.add(new ItemCode('\uE063'));
-        countDownAnimation.add(new ItemCode('\uE064'));
-        countDownAnimation.add(new ItemCode('\uE065'));
-        countDownAnimation.add(new ItemCode('\uE066'));
-        countDownAnimation.add(new ItemCode('\uE067'));
-        countDownAnimation.add(new ItemCode('\uE068'));
-        countDownAnimation.add(new ItemCode('\uE069'));
-        countDownAnimation.add(new ItemCode('\uE070'));
-        countDownAnimation.add(new ItemCode('\uE071'));
-        countDownAnimation.add(new ItemCode('\uE072'));
-        countDownAnimation.add(new ItemCode('\uE073'));
-        countDownAnimation.add(new ItemCode('\uE074'));
-        countDownAnimation.add(new ItemCode('\uE075'));
-        countDownAnimation.add(new ItemCode('\uE076'));
-        countDownAnimation.add(new ItemCode('\uE077'));
-        countDownAnimation.add(new ItemCode('\uE078'));
-        countDownAnimation.add(new ItemCode('\uE079'));
-        countDownAnimation.add(new ItemCode('\uE080'));
-        countDownAnimation.add(new ItemCode('\uE081'));
-        countDownAnimation.add(new ItemCode('\uE082'));
-        countDownAnimation.add(new ItemCode('\uE083'));
-        countDownAnimation.add(new ItemCode('\uE084'));
-        countDownAnimation.add(new ItemCode('\uE085'));
-        countDownAnimation.add(new ItemCode('\uE086'));
-        countDownAnimation.add(new ItemCode('\uE087'));
-        countDownAnimation.add(new ItemCode('\uE088'));
-        countDownAnimation.add(new ItemCode('\uE089'));
-        countDownAnimation.add(new ItemCode('\uE090'));
-        countDownAnimation.add(new ItemCode('\uE091'));
-
-
+        registerCodes();
 
         //CHALLENGES
 
-        challenges.put("PESCAR", new Challenge("PESCAR", Difficulty.EASY, "PESCA UN PEZ"));
+        challenges.put(ChallengeType.FISH, new Challenge(ChallengeType.FISH, Difficulty.EASY, "Pesca un pez."));
+        challenges.put(ChallengeType.JUMP_BED, new Challenge(ChallengeType.JUMP_BED, Difficulty.EASY, "Brinca en una cama."));
+        
     }
 
     public void updateBossBar(){
@@ -287,6 +206,20 @@ public class Game extends BukkitRunnable {
 
     }
 
+    public void challenge(ChallengeType challenge, TeamColor color){
+        Bukkit.broadcastMessage(challenge + " -> " + color.toString());
+    }
+
+    public TeamColor getPlayerTeam(String uuid){
+        for (Team team : teams.values()) {
+            if(team.getPlayers().contains(uuid)){
+                return team.getTeamColor();
+            }
+        }
+
+        return TeamColor.NONE;
+    }
+
     public void addFix(){
         this.fix++;
     }
@@ -337,7 +270,7 @@ public class Game extends BukkitRunnable {
     }
 
     public enum TeamColor {
-        RED, BLUE
+        RED, BLUE, NONE
     }
 
     public enum GameStage {
@@ -346,5 +279,94 @@ public class Game extends BukkitRunnable {
 
     public enum Difficulty{
         EASY, MEDIUM, HARD
+    }
+
+    public void registerCodes(){
+        negativeSpaces.put(-1, Character.toString('\uF801'));
+        negativeSpaces.put(-2, Character.toString('\uF802'));
+        negativeSpaces.put(-3, Character.toString('\uF803'));
+        negativeSpaces.put(-4, Character.toString('\uF804'));
+        negativeSpaces.put(-5, Character.toString('\uF805'));
+        negativeSpaces.put(-6, Character.toString('\uF806'));
+        negativeSpaces.put(-7, Character.toString('\uF807'));
+        negativeSpaces.put(-8, Character.toString('\uF808'));
+
+        negativeSpaces.put(-16, Character.toString('\uF809'));
+        negativeSpaces.put(-32, Character.toString('\uF80A'));
+        negativeSpaces.put(-64, Character.toString('\uF80B'));
+        negativeSpaces.put(-128, Character.toString('\uF80C'));
+        negativeSpaces.put(-256, Character.toString('\uF80D'));
+        negativeSpaces.put(-512, Character.toString('\uF80E'));
+        negativeSpaces.put(-1024, Character.toString('\uF80F'));
+
+        negativeSpaces.put(1, Character.toString('\uF821'));
+        negativeSpaces.put(2, Character.toString('\uF822'));
+        negativeSpaces.put(3, Character.toString('\uF823'));
+        negativeSpaces.put(4, Character.toString('\uF824'));
+        negativeSpaces.put(5, Character.toString('\uF825'));
+        negativeSpaces.put(6, Character.toString('\uF826'));
+        negativeSpaces.put(7, Character.toString('\uF827'));
+        negativeSpaces.put(8, Character.toString('\uF828'));
+
+        negativeSpaces.put(16, Character.toString('\uF829'));
+        negativeSpaces.put(32, Character.toString('\uF82A'));
+        negativeSpaces.put(64, Character.toString('\uF82B'));
+        negativeSpaces.put(128, Character.toString('\uF82C'));
+        negativeSpaces.put(256, Character.toString('\uF82D'));
+        negativeSpaces.put(512, Character.toString('\uF82E'));
+        negativeSpaces.put(1024, Character.toString('\uF82F'));
+        
+        redAnimation.add(new ItemCode('\uE010'));
+        redAnimation.add(new ItemCode('\uE011'));
+        redAnimation.add(new ItemCode('\uE012'));
+        redAnimation.add(new ItemCode('\uE013'));
+
+        blueAnimation.add(new ItemCode('\uE014'));
+        blueAnimation.add(new ItemCode('\uE015'));
+        blueAnimation.add(new ItemCode('\uE016'));
+        blueAnimation.add(new ItemCode('\uE017'));
+
+        countDownAnimation.add(new ItemCode('\uE050'));
+        countDownAnimation.add(new ItemCode('\uE051'));
+        countDownAnimation.add(new ItemCode('\uE052'));
+        countDownAnimation.add(new ItemCode('\uE053'));
+        countDownAnimation.add(new ItemCode('\uE054'));
+        countDownAnimation.add(new ItemCode('\uE055'));
+        countDownAnimation.add(new ItemCode('\uE056'));
+        countDownAnimation.add(new ItemCode('\uE057'));
+        countDownAnimation.add(new ItemCode('\uE058'));
+        countDownAnimation.add(new ItemCode('\uE059'));
+        countDownAnimation.add(new ItemCode('\uE060'));
+        countDownAnimation.add(new ItemCode('\uE061'));
+        countDownAnimation.add(new ItemCode('\uE062'));
+        countDownAnimation.add(new ItemCode('\uE063'));
+        countDownAnimation.add(new ItemCode('\uE064'));
+        countDownAnimation.add(new ItemCode('\uE065'));
+        countDownAnimation.add(new ItemCode('\uE066'));
+        countDownAnimation.add(new ItemCode('\uE067'));
+        countDownAnimation.add(new ItemCode('\uE068'));
+        countDownAnimation.add(new ItemCode('\uE069'));
+        countDownAnimation.add(new ItemCode('\uE070'));
+        countDownAnimation.add(new ItemCode('\uE071'));
+        countDownAnimation.add(new ItemCode('\uE072'));
+        countDownAnimation.add(new ItemCode('\uE073'));
+        countDownAnimation.add(new ItemCode('\uE074'));
+        countDownAnimation.add(new ItemCode('\uE075'));
+        countDownAnimation.add(new ItemCode('\uE076'));
+        countDownAnimation.add(new ItemCode('\uE077'));
+        countDownAnimation.add(new ItemCode('\uE078'));
+        countDownAnimation.add(new ItemCode('\uE079'));
+        countDownAnimation.add(new ItemCode('\uE080'));
+        countDownAnimation.add(new ItemCode('\uE081'));
+        countDownAnimation.add(new ItemCode('\uE082'));
+        countDownAnimation.add(new ItemCode('\uE083'));
+        countDownAnimation.add(new ItemCode('\uE084'));
+        countDownAnimation.add(new ItemCode('\uE085'));
+        countDownAnimation.add(new ItemCode('\uE086'));
+        countDownAnimation.add(new ItemCode('\uE087'));
+        countDownAnimation.add(new ItemCode('\uE088'));
+        countDownAnimation.add(new ItemCode('\uE089'));
+        countDownAnimation.add(new ItemCode('\uE090'));
+        countDownAnimation.add(new ItemCode('\uE091'));
     }
 }

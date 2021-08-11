@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.aleiv.core.paper.Core;
@@ -175,13 +174,23 @@ public class GlobalListener implements Listener {
         });
     }
 
-    
-
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         var player = e.getPlayer();
         var bossBar = instance.getGame().getBossBar();
         bossBar.addPlayer(player);
+
+        var teams = instance.getGame().getTeams();
+
+        var uuid = player.getUniqueId().toString();
+        var players = teams.get(TeamColor.RED).getPlayers();
+        if(players.contains(uuid)){
+            players.remove(uuid);
+            players.add(uuid);  
+        }else{
+            players.add(uuid);  
+        }
+
     }
 
     @EventHandler

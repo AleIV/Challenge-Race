@@ -10,6 +10,7 @@ import co.aikar.commands.annotation.Subcommand;
 import co.aikar.taskchain.TaskChain;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Game.ChallengeType;
 import me.aleiv.core.paper.Game.TeamColor;
 import net.md_5.bungee.api.ChatColor;
 
@@ -50,11 +51,15 @@ public class GlobalCMD extends BaseCommand {
 
     }
 
-    @Subcommand("fix")
-    public void fix(CommandSender sender, Integer i) {
+    @Subcommand("toggle")
+    public void toggle(CommandSender sender, ChallengeType challenge) {
 
         var game = instance.getGame();
-        game.setTest(i);
+        var chall = game.getChallenges().get(challenge);
+        var bool = !chall.getEnabled();
+        chall.setEnabled(bool);
+        Bukkit.broadcastMessage(bool + "->" + chall.getType().toString());
+
 
     }
 
