@@ -69,7 +69,7 @@ public class Game extends BukkitRunnable {
         BREAK_HOE,
         CRAFT_PAINTING,
         PAINT_SHEEP,
-        COOK_IRON,
+        BREAK_IRON_ORE,
         EAT_APPLE,
         CRAFT_POT,
         CACTUS_DAMAGE,
@@ -125,13 +125,13 @@ public class Game extends BukkitRunnable {
 
         //CHALLENGES
 
-        //EASY
+        //EASY TODO Cambiar el idioma a iglés.
         challenges.put(ChallengeType.FISH, new Challenge(ChallengeType.FISH, Difficulty.EASY, "Pesca un pez."));
         challenges.put(ChallengeType.BREAK_HOE, new Challenge(ChallengeType.BREAK_HOE, Difficulty.EASY, "Rompe una azada de madera usandola."));
         challenges.put(ChallengeType.CRAFT_PAINTING, new Challenge(ChallengeType.CRAFT_PAINTING, Difficulty.EASY, "Craftea un cuadro."));
         challenges.put(ChallengeType.JUMP_BED, new Challenge(ChallengeType.JUMP_BED, Difficulty.EASY, "Brinca en una cama."));
         challenges.put(ChallengeType.PAINT_SHEEP, new Challenge(ChallengeType.PAINT_SHEEP, Difficulty.EASY, "Pinta una oveja de morado."));
-        challenges.put(ChallengeType.COOK_IRON, new Challenge(ChallengeType.COOK_IRON, Difficulty.EASY, "Cocina un lingote de hierro."));
+        challenges.put(ChallengeType.BREAK_IRON_ORE, new Challenge(ChallengeType.BREAK_IRON_ORE, Difficulty.EASY, "Rompe una mena de hierro."));
         challenges.put(ChallengeType.EAT_APPLE, new Challenge(ChallengeType.EAT_APPLE, Difficulty.EASY, "Come una manzana."));
         challenges.put(ChallengeType.CRAFT_POT, new Challenge(ChallengeType.CRAFT_POT, Difficulty.EASY, "Craftea una maceta."));
         challenges.put(ChallengeType.CACTUS_DAMAGE, new Challenge(ChallengeType.CACTUS_DAMAGE, Difficulty.EASY, "Recibe daño de un cactus."));
@@ -139,6 +139,7 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.SWIMM_DOLPHIN, new Challenge(ChallengeType.SWIMM_DOLPHIN, Difficulty.EASY, "Nada con un delfín."));
         challenges.put(ChallengeType.CRAFT_DIAMOND_SHOVEL, new Challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, Difficulty.EASY, "Craftea una pala de diamante."));
         challenges.put(ChallengeType.TRADE_VILLAGER, new Challenge(ChallengeType.TRADE_VILLAGER, Difficulty.EASY, "Tradea con un aldeano."));
+        // TODA LA PARTE DE ARRIBA ESTÁ TERMINADA. -LOFRO.
         challenges.put(ChallengeType.WATERDROP_50_BLOCKS, new Challenge(ChallengeType.WATERDROP_50_BLOCKS, Difficulty.EASY, "Haz un waterdrop desde 50 bloques de altura."));
         challenges.put(ChallengeType.HIGH_LIMIT, new Challenge(ChallengeType.HIGH_LIMIT, Difficulty.EASY, "Sube a la altura máxima."));
         challenges.put(ChallengeType.CRAFT_SUSP_STEW, new Challenge(ChallengeType.CRAFT_SUSP_STEW, Difficulty.EASY, "Craftea una sopa sospechosa."));
@@ -147,7 +148,7 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.EAT_ROTTEN_FLESH, new Challenge(ChallengeType.EAT_ROTTEN_FLESH, Difficulty.EASY, "Come carne podrida."));
         challenges.put(ChallengeType.PUT_CHEST_DONKEY, new Challenge(ChallengeType.PUT_CHEST_DONKEY, Difficulty.EASY, "Pon un cofre en un burro."));
 
-        //MEDIUM
+        //MEDIUM TODO Cambiar el idioma a iglés.
         challenges.put(ChallengeType.CREATE_NETHER_PORTAL, new Challenge(ChallengeType.CREATE_NETHER_PORTAL, Difficulty.MEDIUM, "Crea un portal al nether."));
         challenges.put(ChallengeType.KILL_STRIDER, new Challenge(ChallengeType.KILL_STRIDER, Difficulty.MEDIUM, "Mata a un strider."));
         challenges.put(ChallengeType.MOUNT_PIGG, new Challenge(ChallengeType.MOUNT_PIGG, Difficulty.MEDIUM, "Monta un cerdo."));
@@ -161,7 +162,7 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.EAT_CAKE, new Challenge(ChallengeType.EAT_CAKE, Difficulty.MEDIUM, "Come un pastel."));
         challenges.put(ChallengeType.BRING_WATER_NETHER, new Challenge(ChallengeType.BRING_WATER_NETHER, Difficulty.MEDIUM, "Trae agua al nether mediante un caldero."));
 
-        //HARD
+        //HARD TODO Cambiar el idioma a iglés.
         challenges.put(ChallengeType.BREAK_BEE_NEST, new Challenge(ChallengeType.BREAK_BEE_NEST, Difficulty.HARD, "Rompe un panal de abejas."));
         challenges.put(ChallengeType.CRAFT_RABBIT_STEW, new Challenge(ChallengeType.CRAFT_RABBIT_STEW, Difficulty.HARD, "Craftea un estofado de conejo."));
         challenges.put(ChallengeType.CRAFT_END_CRYSTAL, new Challenge(ChallengeType.CRAFT_END_CRYSTAL, Difficulty.HARD, "Craftea un end crystal."));
