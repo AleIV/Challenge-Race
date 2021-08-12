@@ -7,9 +7,9 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.taskchain.TaskChain;
 import lombok.NonNull;
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Frames;
 import me.aleiv.core.paper.Game.ChallengeType;
 import me.aleiv.core.paper.Game.TeamColor;
 import net.md_5.bungee.api.ChatColor;
@@ -68,22 +68,7 @@ public class GlobalCMD extends BaseCommand {
 
         var game = instance.getGame();
 
-        var chain = Core.newChain();
-        
-        game.getCountDownAnimation().forEach(an ->{
-            chain.delay(i).sync(() -> {
-
-                var anim = Character.toString(an.getCode());
-
-                Bukkit.getOnlinePlayers().forEach(p->{
-                    p.sendTitle(anim, "", 0, 10, 40);
-                   
-                });
-
-            });
-        });
-    
-        chain.sync(TaskChain::abort).execute();
+        game.animation(4, Frames.getFramesCharsIntegers(108, 176));
 
 
     }

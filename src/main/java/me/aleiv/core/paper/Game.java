@@ -19,7 +19,6 @@ import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.events.addPointsEvent;
 import me.aleiv.core.paper.events.removePointsEvent;
 import me.aleiv.core.paper.objects.Challenge;
-import me.aleiv.core.paper.objects.ItemCode;
 import me.aleiv.core.paper.objects.Team;
 
 @Data
@@ -53,13 +52,6 @@ public class Game extends BukkitRunnable {
     int redPerm = -329;
     int fix = 35;
     int middleFix = 0;
-
-    int test = 0;
-
-    List<ItemCode> redAnimation = new ArrayList<>();
-    List<ItemCode> blueAnimation = new ArrayList<>();
-    List<ItemCode> countDownAnimation = new ArrayList<>();
-
 
     public enum ChallengeType {
 
@@ -118,7 +110,7 @@ public class Game extends BukkitRunnable {
 
         gameStage = GameStage.INGAME;
 
-        bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), "BOSSBAR", BarColor.BLUE, BarStyle.SOLID);
+        bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), Character.toString('\uE058') + "", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
 
         registerCodes();
@@ -322,18 +314,15 @@ public class Game extends BukkitRunnable {
         this.middleFix--;
     }
 
-    public void animation(int frames, List<ItemCode> animationList){
+    public void animation(int frames, List<Character> animationList){
 
         var chain = Core.newChain();
 
-        animationList.forEach(an ->{
+        animationList.forEach(charac ->{
             chain.delay(frames).sync(() -> {
 
-                var anim = Character.toString(an.getCode());
-                animation = anim;
-
                 Bukkit.getOnlinePlayers().forEach(p->{
-                    p.sendTitle(animation, "", 0, 20, 20);
+                    p.sendTitle(charac + "", "", 0, 20, 20);
                    
                 });
 
@@ -402,57 +391,5 @@ public class Game extends BukkitRunnable {
         negativeSpaces.put(512, Character.toString('\uF82E'));
         negativeSpaces.put(1024, Character.toString('\uF82F'));
         
-        redAnimation.add(new ItemCode('\uE010'));
-        redAnimation.add(new ItemCode('\uE011'));
-        redAnimation.add(new ItemCode('\uE012'));
-        redAnimation.add(new ItemCode('\uE013'));
-
-        blueAnimation.add(new ItemCode('\uE014'));
-        blueAnimation.add(new ItemCode('\uE015'));
-        blueAnimation.add(new ItemCode('\uE016'));
-        blueAnimation.add(new ItemCode('\uE017'));
-
-        countDownAnimation.add(new ItemCode('\uE050'));
-        countDownAnimation.add(new ItemCode('\uE051'));
-        countDownAnimation.add(new ItemCode('\uE052'));
-        countDownAnimation.add(new ItemCode('\uE053'));
-        countDownAnimation.add(new ItemCode('\uE054'));
-        countDownAnimation.add(new ItemCode('\uE055'));
-        countDownAnimation.add(new ItemCode('\uE056'));
-        countDownAnimation.add(new ItemCode('\uE057'));
-        countDownAnimation.add(new ItemCode('\uE058'));
-        countDownAnimation.add(new ItemCode('\uE059'));
-        countDownAnimation.add(new ItemCode('\uE060'));
-        countDownAnimation.add(new ItemCode('\uE061'));
-        countDownAnimation.add(new ItemCode('\uE062'));
-        countDownAnimation.add(new ItemCode('\uE063'));
-        countDownAnimation.add(new ItemCode('\uE064'));
-        countDownAnimation.add(new ItemCode('\uE065'));
-        countDownAnimation.add(new ItemCode('\uE066'));
-        countDownAnimation.add(new ItemCode('\uE067'));
-        countDownAnimation.add(new ItemCode('\uE068'));
-        countDownAnimation.add(new ItemCode('\uE069'));
-        countDownAnimation.add(new ItemCode('\uE070'));
-        countDownAnimation.add(new ItemCode('\uE071'));
-        countDownAnimation.add(new ItemCode('\uE072'));
-        countDownAnimation.add(new ItemCode('\uE073'));
-        countDownAnimation.add(new ItemCode('\uE074'));
-        countDownAnimation.add(new ItemCode('\uE075'));
-        countDownAnimation.add(new ItemCode('\uE076'));
-        countDownAnimation.add(new ItemCode('\uE077'));
-        countDownAnimation.add(new ItemCode('\uE078'));
-        countDownAnimation.add(new ItemCode('\uE079'));
-        countDownAnimation.add(new ItemCode('\uE080'));
-        countDownAnimation.add(new ItemCode('\uE081'));
-        countDownAnimation.add(new ItemCode('\uE082'));
-        countDownAnimation.add(new ItemCode('\uE083'));
-        countDownAnimation.add(new ItemCode('\uE084'));
-        countDownAnimation.add(new ItemCode('\uE085'));
-        countDownAnimation.add(new ItemCode('\uE086'));
-        countDownAnimation.add(new ItemCode('\uE087'));
-        countDownAnimation.add(new ItemCode('\uE088'));
-        countDownAnimation.add(new ItemCode('\uE089'));
-        countDownAnimation.add(new ItemCode('\uE090'));
-        countDownAnimation.add(new ItemCode('\uE091'));
     }
 }

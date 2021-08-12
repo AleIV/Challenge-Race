@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.aleiv.core.paper.Core;
+import me.aleiv.core.paper.Frames;
 import me.aleiv.core.paper.Game.TeamColor;
 import me.aleiv.core.paper.events.GameTickEvent;
 import me.aleiv.core.paper.events.addPointsEvent;
@@ -237,13 +238,13 @@ public class GlobalListener implements Listener {
             switch (color) {
                 case RED:{
 
-                    game.animation(5, game.getRedAnimation());
+                     game.animation(4, Frames.getFramesCharsIntegers(10, 57));
                     
                 }break;
 
                 case BLUE:{
 
-                    game.animation(5, game.getBlueAnimation());
+                    game.animation(4, Frames.getFramesCharsIntegers(59, 107));
 
                 }break;
             
