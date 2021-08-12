@@ -7,9 +7,11 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import co.aikar.taskchain.TaskChain;
@@ -69,9 +71,7 @@ public class Game extends BukkitRunnable {
         SWIMM_DOLPHIN,
         CRAFT_DIAMOND_SHOVEL,
         TRADE_VILLAGER,
-        WATERDROP_50_BLOCKS,
         HIGH_LIMIT,
-        CRAFT_SUSP_STEW,
         EAT_DRY_KELP,
         THROW_EGG,
         EAT_ROTTEN_FLESH,
@@ -81,23 +81,17 @@ public class Game extends BukkitRunnable {
         CREATE_NETHER_PORTAL,
         KILL_STRIDER,
         MOUNT_PIGG,
-        FIND_CHEST,
-        REPAIR_ITEM,
-        DISENCHANT,
         GROW_TREE_IN_NETHER,
         KILL_IRON_GOLEM,
         EAT_GOLDEN_APPLE,
         SLEEP_IN_NETHER,
-        EAT_CAKE,
-        BRING_WATER_NETHER,
 
         //HARD MODE
         BREAK_BEE_NEST,
         CRAFT_RABBIT_STEW,
         CRAFT_END_CRYSTAL,
         EAT_BEETROOT_ON_PIG,
-        DRINK_MILK_WHILE_POISON,
-        THROW_SNOWBALL_TO_PLAYER
+        KILL_PLAYER
 
     }
 
@@ -108,7 +102,7 @@ public class Game extends BukkitRunnable {
         teams.put(TeamColor.RED, new Team(TeamColor.RED));
         teams.put(TeamColor.BLUE, new Team(TeamColor.BLUE));
 
-        gameStage = GameStage.INGAME;
+        gameStage = GameStage.LOBBY;
 
         bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), Character.toString('\uE058') + "", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
@@ -118,50 +112,43 @@ public class Game extends BukkitRunnable {
         //CHALLENGES
 
         //EASY TODO Cambiar el idioma a iglés.
-        challenges.put(ChallengeType.FISH, new Challenge(ChallengeType.FISH, Difficulty.EASY, "Pesca un pez."));
-        challenges.put(ChallengeType.BREAK_HOE, new Challenge(ChallengeType.BREAK_HOE, Difficulty.EASY, "Rompe una azada de madera usandola."));
-        challenges.put(ChallengeType.CRAFT_PAINTING, new Challenge(ChallengeType.CRAFT_PAINTING, Difficulty.EASY, "Craftea un cuadro."));
-        challenges.put(ChallengeType.JUMP_BED, new Challenge(ChallengeType.JUMP_BED, Difficulty.EASY, "Brinca en una cama."));
-        challenges.put(ChallengeType.PAINT_SHEEP, new Challenge(ChallengeType.PAINT_SHEEP, Difficulty.EASY, "Pinta una oveja de morado."));
-        challenges.put(ChallengeType.BREAK_IRON_ORE, new Challenge(ChallengeType.BREAK_IRON_ORE, Difficulty.EASY, "Rompe una mena de hierro."));
-        challenges.put(ChallengeType.EAT_APPLE, new Challenge(ChallengeType.EAT_APPLE, Difficulty.EASY, "Come una manzana."));
-        challenges.put(ChallengeType.CRAFT_POT, new Challenge(ChallengeType.CRAFT_POT, Difficulty.EASY, "Craftea una maceta."));
-        challenges.put(ChallengeType.CACTUS_DAMAGE, new Challenge(ChallengeType.CACTUS_DAMAGE, Difficulty.EASY, "Recibe daño de un cactus."));
-        challenges.put(ChallengeType.BREED_SHEEPS, new Challenge(ChallengeType.BREED_SHEEPS, Difficulty.EASY, "Reproduce dos ovejas."));
-        challenges.put(ChallengeType.SWIMM_DOLPHIN, new Challenge(ChallengeType.SWIMM_DOLPHIN, Difficulty.EASY, "Nada con un delfín."));
-        challenges.put(ChallengeType.CRAFT_DIAMOND_SHOVEL, new Challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, Difficulty.EASY, "Craftea una pala de diamante."));
-        challenges.put(ChallengeType.TRADE_VILLAGER, new Challenge(ChallengeType.TRADE_VILLAGER, Difficulty.EASY, "Tradea con un aldeano."));
-        // TODO LOS DESAFÍOS DE WATERDROP Y HIGH LIMIT NO PUEDEN SER DETECTADOS.
-        challenges.put(ChallengeType.WATERDROP_50_BLOCKS, new Challenge(ChallengeType.WATERDROP_50_BLOCKS, Difficulty.EASY, "Haz un waterdrop desde 50 bloques de altura."));
-        challenges.put(ChallengeType.HIGH_LIMIT, new Challenge(ChallengeType.HIGH_LIMIT, Difficulty.EASY, "Sube a la altura máxima."));
-        // HICE TODOS MENOS ESTOS DOS DE ARRIBA. -LOFRO.
-        challenges.put(ChallengeType.CRAFT_SUSP_STEW, new Challenge(ChallengeType.CRAFT_SUSP_STEW, Difficulty.EASY, "Craftea una sopa sospechosa."));
-        challenges.put(ChallengeType.EAT_DRY_KELP, new Challenge(ChallengeType.EAT_DRY_KELP, Difficulty.EASY, "Come algas secas."));
-        challenges.put(ChallengeType.THROW_EGG, new Challenge(ChallengeType.THROW_EGG, Difficulty.EASY, "Lanza un huevo."));
-        challenges.put(ChallengeType.EAT_ROTTEN_FLESH, new Challenge(ChallengeType.EAT_ROTTEN_FLESH, Difficulty.EASY, "Come carne podrida."));
-        challenges.put(ChallengeType.PUT_CHEST_DONKEY, new Challenge(ChallengeType.PUT_CHEST_DONKEY, Difficulty.EASY, "Pon un cofre en un burro."));
+        challenges.put(ChallengeType.FISH, new Challenge(ChallengeType.FISH, Difficulty.EASY, "Pesca un pez.")); //OK
+        challenges.put(ChallengeType.BREAK_HOE, new Challenge(ChallengeType.BREAK_HOE, Difficulty.EASY, "Rompe una azada de madera.")); //OK
+        challenges.put(ChallengeType.CRAFT_PAINTING, new Challenge(ChallengeType.CRAFT_PAINTING, Difficulty.EASY, "Craftea un cuadro.")); //OK
+        challenges.put(ChallengeType.JUMP_BED, new Challenge(ChallengeType.JUMP_BED, Difficulty.EASY, "Brinca en una cama."));//OK
+        challenges.put(ChallengeType.PAINT_SHEEP, new Challenge(ChallengeType.PAINT_SHEEP, Difficulty.EASY, "Pinta una oveja de morado."));//OK
+        challenges.put(ChallengeType.BREAK_IRON_ORE, new Challenge(ChallengeType.BREAK_IRON_ORE, Difficulty.EASY, "Rompe una mena de hierro."));//OK
+        challenges.put(ChallengeType.EAT_APPLE, new Challenge(ChallengeType.EAT_APPLE, Difficulty.EASY, "Come una manzana.")); //OK
+        challenges.put(ChallengeType.CRAFT_POT, new Challenge(ChallengeType.CRAFT_POT, Difficulty.EASY, "Craftea una maceta.")); //OK
+        challenges.put(ChallengeType.CACTUS_DAMAGE, new Challenge(ChallengeType.CACTUS_DAMAGE, Difficulty.EASY, "Recibe daño de un cactus."));//OK
+        challenges.put(ChallengeType.BREED_SHEEPS, new Challenge(ChallengeType.BREED_SHEEPS, Difficulty.EASY, "Reproduce dos ovejas.")); //OK
+        challenges.put(ChallengeType.SWIMM_DOLPHIN, new Challenge(ChallengeType.SWIMM_DOLPHIN, Difficulty.EASY, "Nada con un delfín."));//OK
+        challenges.put(ChallengeType.CRAFT_DIAMOND_SHOVEL, new Challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, Difficulty.EASY, "Craftea una pala de diamante."));//OK
+        challenges.put(ChallengeType.EAT_DRY_KELP, new Challenge(ChallengeType.EAT_DRY_KELP, Difficulty.EASY, "Come algas secas."));//OK
+        challenges.put(ChallengeType.THROW_EGG, new Challenge(ChallengeType.THROW_EGG, Difficulty.EASY, "Lanza un huevo."));//OK
+        challenges.put(ChallengeType.EAT_ROTTEN_FLESH, new Challenge(ChallengeType.EAT_ROTTEN_FLESH, Difficulty.EASY, "Come carne podrida."));//OK
+        challenges.put(ChallengeType.PUT_CHEST_DONKEY, new Challenge(ChallengeType.PUT_CHEST_DONKEY, Difficulty.EASY, "Pon un cofre en un burro."));//OK
 
         //MEDIUM TODO Cambiar el idioma a iglés.
-        challenges.put(ChallengeType.CREATE_NETHER_PORTAL, new Challenge(ChallengeType.CREATE_NETHER_PORTAL, Difficulty.MEDIUM, "Crea un portal al nether."));
-        challenges.put(ChallengeType.KILL_STRIDER, new Challenge(ChallengeType.KILL_STRIDER, Difficulty.MEDIUM, "Mata a un strider."));
-        challenges.put(ChallengeType.MOUNT_PIGG, new Challenge(ChallengeType.MOUNT_PIGG, Difficulty.MEDIUM, "Monta un cerdo."));
-        challenges.put(ChallengeType.FIND_CHEST, new Challenge(ChallengeType.FIND_CHEST, Difficulty.MEDIUM, "Encuentra un cofre del tesoro."));
-        challenges.put(ChallengeType.REPAIR_ITEM, new Challenge(ChallengeType.REPAIR_ITEM, Difficulty.MEDIUM, "Repara un item."));
-        challenges.put(ChallengeType.DISENCHANT, new Challenge(ChallengeType.DISENCHANT, Difficulty.MEDIUM, "Desencanta un objeto."));
-        challenges.put(ChallengeType.GROW_TREE_IN_NETHER, new Challenge(ChallengeType.GROW_TREE_IN_NETHER, Difficulty.MEDIUM, "Haz crecer un arbol en el Nether."));
-        challenges.put(ChallengeType.KILL_IRON_GOLEM, new Challenge(ChallengeType.KILL_IRON_GOLEM, Difficulty.MEDIUM, "Mata un iron golem."));
-        challenges.put(ChallengeType.EAT_GOLDEN_APPLE, new Challenge(ChallengeType.EAT_GOLDEN_APPLE, Difficulty.MEDIUM, "Come una golden apple."));
-        challenges.put(ChallengeType.SLEEP_IN_NETHER, new Challenge(ChallengeType.SLEEP_IN_NETHER, Difficulty.MEDIUM, "Duerme en el nether."));
-        challenges.put(ChallengeType.EAT_CAKE, new Challenge(ChallengeType.EAT_CAKE, Difficulty.MEDIUM, "Come un pastel."));
-        challenges.put(ChallengeType.BRING_WATER_NETHER, new Challenge(ChallengeType.BRING_WATER_NETHER, Difficulty.MEDIUM, "Trae agua al nether mediante un caldero."));
+        challenges.put(ChallengeType.TRADE_VILLAGER, new Challenge(ChallengeType.TRADE_VILLAGER, Difficulty.EASY, "Tradea con un aldeano."));//OK
+        challenges.put(ChallengeType.HIGH_LIMIT, new Challenge(ChallengeType.HIGH_LIMIT, Difficulty.MEDIUM, "Sube a la altura máxima."));//OK
+        challenges.put(ChallengeType.CREATE_NETHER_PORTAL, new Challenge(ChallengeType.CREATE_NETHER_PORTAL, Difficulty.MEDIUM, "Crea un portal al nether."));//OK
+        challenges.put(ChallengeType.KILL_STRIDER, new Challenge(ChallengeType.KILL_STRIDER, Difficulty.MEDIUM, "Mata a un strider."));//OK
+        challenges.put(ChallengeType.GROW_TREE_IN_NETHER, new Challenge(ChallengeType.GROW_TREE_IN_NETHER, Difficulty.MEDIUM, "Haz crecer un arbol en el Nether."));//OK
+        challenges.put(ChallengeType.KILL_IRON_GOLEM, new Challenge(ChallengeType.KILL_IRON_GOLEM, Difficulty.MEDIUM, "Mata un iron golem."));//OK
+        challenges.put(ChallengeType.EAT_GOLDEN_APPLE, new Challenge(ChallengeType.EAT_GOLDEN_APPLE, Difficulty.MEDIUM, "Come una golden apple."));//OK
+        challenges.put(ChallengeType.SLEEP_IN_NETHER, new Challenge(ChallengeType.SLEEP_IN_NETHER, Difficulty.MEDIUM, "Duerme en el nether."));//OK
 
         //HARD TODO Cambiar el idioma a iglés.
-        challenges.put(ChallengeType.BREAK_BEE_NEST, new Challenge(ChallengeType.BREAK_BEE_NEST, Difficulty.HARD, "Rompe un panal de abejas."));
-        challenges.put(ChallengeType.CRAFT_RABBIT_STEW, new Challenge(ChallengeType.CRAFT_RABBIT_STEW, Difficulty.HARD, "Craftea un estofado de conejo."));
-        challenges.put(ChallengeType.CRAFT_END_CRYSTAL, new Challenge(ChallengeType.CRAFT_END_CRYSTAL, Difficulty.HARD, "Craftea un end crystal."));
-        challenges.put(ChallengeType.EAT_BEETROOT_ON_PIG, new Challenge(ChallengeType.EAT_BEETROOT_ON_PIG, Difficulty.HARD, "Come un rábano encima de un cerdo."));
-        challenges.put(ChallengeType.DRINK_MILK_WHILE_POISON, new Challenge(ChallengeType.DRINK_MILK_WHILE_POISON, Difficulty.HARD, "Quitate el efecto de veneno con leche."));
-        challenges.put(ChallengeType.THROW_SNOWBALL_TO_PLAYER, new Challenge(ChallengeType.THROW_SNOWBALL_TO_PLAYER, Difficulty.HARD, "Lanzale una bola de nieve a un jugador."));
+        challenges.put(ChallengeType.BREAK_BEE_NEST, new Challenge(ChallengeType.BREAK_BEE_NEST, Difficulty.HARD, "Rompe un panal de abejas."));//OK
+        challenges.put(ChallengeType.CRAFT_RABBIT_STEW, new Challenge(ChallengeType.CRAFT_RABBIT_STEW, Difficulty.HARD, "Craftea un estofado de conejo."));//OK
+        challenges.put(ChallengeType.CRAFT_END_CRYSTAL, new Challenge(ChallengeType.CRAFT_END_CRYSTAL, Difficulty.HARD, "Craftea un end crystal."));//OK
+        challenges.put(ChallengeType.EAT_BEETROOT_ON_PIG, new Challenge(ChallengeType.EAT_BEETROOT_ON_PIG, Difficulty.HARD, "Come un rábano encima de un cerdo.")); //OK
+        challenges.put(ChallengeType.KILL_PLAYER, new Challenge(ChallengeType.KILL_PLAYER, Difficulty.HARD, "Mata a un jugador."));//OK
+
+        challenges.values().forEach(chall -> {
+            chall.setEnabled(true);
+        });
         
     }
 
@@ -193,6 +180,11 @@ public class Game extends BukkitRunnable {
             removeFix();
 
             Bukkit.getPluginManager().callEvent(new addPointsEvent(1, TeamColor.BLUE));
+            Bukkit.getOnlinePlayers().forEach(p ->{
+                var player = (Player) p;
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+
+            });
             
         }else if(teamColor == TeamColor.RED ){
 
@@ -203,6 +195,11 @@ public class Game extends BukkitRunnable {
             removeMFix();
 
             Bukkit.getPluginManager().callEvent(new addPointsEvent(1, TeamColor.RED));
+            Bukkit.getOnlinePlayers().forEach(p ->{
+                var player = (Player) p;
+                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_BANJO, 1, 1);
+
+            });
         }
 
         updateBossBar();
@@ -285,12 +282,24 @@ public class Game extends BukkitRunnable {
     }
 
     public void challenge(ChallengeType challenge, TeamColor color){
+
+        var chain = Core.newChain();
+
+        for (int i = 0; i < 6; i++) {
+            chain.delay(1).sync(() -> {
+                addPoint(color);
+
+            });
+        }
+    
+        chain.sync(TaskChain::abort).execute();
+
         Bukkit.broadcastMessage(challenge + " -> " + color.toString());
     }
 
-    public TeamColor getPlayerTeam(String uuid){
+    public TeamColor getPlayerTeam(String name){
         for (Team team : teams.values()) {
-            if(team.getPlayers().contains(uuid)){
+            if(team.getPlayers().contains(name)){
                 return team.getTeamColor();
             }
         }

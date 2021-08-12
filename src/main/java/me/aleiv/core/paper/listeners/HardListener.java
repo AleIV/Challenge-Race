@@ -3,11 +3,10 @@ package me.aleiv.core.paper.listeners;
 import org.bukkit.Material;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
@@ -31,8 +30,8 @@ public class HardListener implements Listener{
         var block = e.getBlock();
         if(challenges.get(ChallengeType.BREAK_BEE_NEST).getEnabled() && block.getType() == Material.BEE_NEST){
             var player = e.getPlayer();
-            var uuid = player.getUniqueId().toString();
-            var team = game.getPlayerTeam(uuid);
+            var name = player.getName();
+            var team = game.getPlayerTeam(name);
 
 
             game.challenge(ChallengeType.BREAK_BEE_NEST, team);
@@ -46,16 +45,16 @@ public class HardListener implements Listener{
         var item = e.getCurrentItem();
         if(challenges.get(ChallengeType.CRAFT_RABBIT_STEW).getEnabled() && item != null && item.getType() == Material.RABBIT_STEW){
             var player = (Player) e.getWhoClicked();
-            var uuid = player.getUniqueId().toString();
-            var team = game.getPlayerTeam(uuid);
+            var name = player.getName();
+            var team = game.getPlayerTeam(name);
 
 
             game.challenge(ChallengeType.CRAFT_RABBIT_STEW, team);
 
         }else if(challenges.get(ChallengeType.CRAFT_END_CRYSTAL).getEnabled() && item != null && item.getType() == Material.END_CRYSTAL){
             var player = (Player) e.getWhoClicked();
-            var uuid = player.getUniqueId().toString();
-            var team = game.getPlayerTeam(uuid);
+            var name = player.getName();
+            var team = game.getPlayerTeam(name);
 
 
             game.challenge(ChallengeType.CRAFT_END_CRYSTAL, team);
@@ -73,8 +72,8 @@ public class HardListener implements Listener{
 
             if(check != null && check instanceof Pig){
                 if(item != null && item.getType() == Material.BEETROOT){
-                    var uuid = player.getUniqueId().toString();
-                    var team = game.getPlayerTeam(uuid);
+                    var name = player.getName();
+                    var team = game.getPlayerTeam(name);
         
         
                     game.challenge(ChallengeType.EAT_BEETROOT_ON_PIG, team);
@@ -87,11 +86,20 @@ public class HardListener implements Listener{
     }
 
     @EventHandler
-    public void onShoot(EntityDamageByEntityEvent e){
-        var shoot = e.getEntity();
-        if(shoot instanceof Snowball){
-            
-        }
+    public void kill(PlayerDeathEvent e){
+        var game = instance.getGame();
+        var challenges = game.getChallenges();
+
+        var killer = e.getEntity().getKiller();
+
+        if(challenges.get(ChallengeType.KILL_PLAYER).getEnabled() && killer != null){
+
+            var name = e.getEntity().getName();
+            var team = game.getPlayerTeam(name);
+
+            game.challenge(ChallengeType.KILL_PLAYER, team);
+
+        } 
     }
 
 

@@ -68,7 +68,7 @@ public class GlobalCMD extends BaseCommand {
 
         var game = instance.getGame();
 
-        game.animation(4, Frames.getFramesCharsIntegers(108, 176));
+        game.animation(i, Frames.getFramesCharsIntegers(108, 176));
 
 
     }
