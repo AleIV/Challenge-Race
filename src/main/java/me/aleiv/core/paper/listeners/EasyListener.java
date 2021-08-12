@@ -4,10 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Sheep;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -21,7 +18,6 @@ import org.bukkit.event.player.*;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Game.ChallengeType;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.potion.PotionEffectType;
@@ -106,6 +102,10 @@ public class EasyListener implements Listener{
 
             game.challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, team);
 
+        } else if (challenge.get(ChallengeType.CRAFT_SUSP_STEW).getEnabled() && item.getType().equals(Material.SUSPICIOUS_STEW)) {
+
+            game.challenge(ChallengeType.CRAFT_SUSP_STEW, team);
+
         }
 
     }
@@ -146,8 +146,12 @@ public class EasyListener implements Listener{
         if (challenge.get(ChallengeType.PAINT_SHEEP).getEnabled() && entity instanceof Sheep
                 && player.getInventory().getItemInMainHand().getType().equals(Material.PURPLE_DYE)) {
 
-
             game.challenge(ChallengeType.PAINT_SHEEP, team);
+
+        } else if (challenge.get(ChallengeType.PUT_CHEST_DONKEY).getEnabled() && entity instanceof Donkey
+                && player.getInventory().getItemInMainHand().getType().equals(Material.CHEST)) {
+
+            game.challenge(ChallengeType.PUT_CHEST_DONKEY, team);
 
         }
 
@@ -190,6 +194,14 @@ public class EasyListener implements Listener{
         if (challenge.get(ChallengeType.EAT_APPLE).getEnabled() && item.getType().equals(Material.APPLE)) {
 
             game.challenge(ChallengeType.EAT_APPLE, team);
+
+        } else if (challenge.get(ChallengeType.EAT_DRY_KELP).getEnabled() && item.getType().equals(Material.DRIED_KELP)) {
+
+            game.challenge(ChallengeType.EAT_DRY_KELP, team);
+
+        } else if (challenge.get(ChallengeType.EAT_ROTTEN_FLESH).getEnabled() && item.getType().equals(Material.ROTTEN_FLESH)) {
+
+            game.challenge(ChallengeType.EAT_ROTTEN_FLESH, team);
 
         }
 
@@ -291,6 +303,26 @@ public class EasyListener implements Listener{
             if (recipe == null) return;
 
             game.challenge(ChallengeType.TRADE_VILLAGER, team);
+
+        }
+
+    }
+
+    //TODO Testear esto.
+    @EventHandler
+    public void onEggThrow (PlayerEggThrowEvent e) {
+
+        var player = e.getPlayer();
+
+        var game = instance.getGame();
+        var challenge = game.getChallenges();
+
+        var uuid = player.getUniqueId().toString();
+        var team = game.getPlayerTeam(uuid);
+
+        if (challenge.get(ChallengeType.THROW_EGG).getEnabled()) {
+
+            game.challenge(ChallengeType.THROW_EGG, team);
 
         }
 

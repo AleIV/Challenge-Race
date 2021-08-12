@@ -139,9 +139,10 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.SWIMM_DOLPHIN, new Challenge(ChallengeType.SWIMM_DOLPHIN, Difficulty.EASY, "Nada con un delfín."));
         challenges.put(ChallengeType.CRAFT_DIAMOND_SHOVEL, new Challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, Difficulty.EASY, "Craftea una pala de diamante."));
         challenges.put(ChallengeType.TRADE_VILLAGER, new Challenge(ChallengeType.TRADE_VILLAGER, Difficulty.EASY, "Tradea con un aldeano."));
-        // TODA LA PARTE DE ARRIBA ESTÁ TERMINADA. -LOFRO.
+        // TODO LOS DESAFÍOS DE WATERDROP Y HIGH LIMIT NO PUEDEN SER DETECTADOS.
         challenges.put(ChallengeType.WATERDROP_50_BLOCKS, new Challenge(ChallengeType.WATERDROP_50_BLOCKS, Difficulty.EASY, "Haz un waterdrop desde 50 bloques de altura."));
         challenges.put(ChallengeType.HIGH_LIMIT, new Challenge(ChallengeType.HIGH_LIMIT, Difficulty.EASY, "Sube a la altura máxima."));
+        // HICE TODOS MENOS ESTOS DOS DE ARRIBA. -LOFRO.
         challenges.put(ChallengeType.CRAFT_SUSP_STEW, new Challenge(ChallengeType.CRAFT_SUSP_STEW, Difficulty.EASY, "Craftea una sopa sospechosa."));
         challenges.put(ChallengeType.EAT_DRY_KELP, new Challenge(ChallengeType.EAT_DRY_KELP, Difficulty.EASY, "Come algas secas."));
         challenges.put(ChallengeType.THROW_EGG, new Challenge(ChallengeType.THROW_EGG, Difficulty.EASY, "Lanza un huevo."));
