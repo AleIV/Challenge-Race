@@ -21,62 +21,58 @@ public class HardListener implements Listener{
         this.instance = instance;
     }
 
-    
-
     @EventHandler
     public void onBreak(BlockBreakEvent e){
         var game = instance.getGame();
-        var challenges = game.getChallenges();
         var block = e.getBlock();
-        if(challenges.get(ChallengeType.BREAK_BEE_NEST).getEnabled() && block.getType() == Material.BEE_NEST){
-            var player = e.getPlayer();
-            var name = player.getName();
-            var team = game.getPlayerTeam(name);
 
+        var name = e.getPlayer().getName();
+        var teamColor = game.getPlayerTeam(name);
+        var team = game.getTeams().get(teamColor);
 
-            game.challenge(ChallengeType.BREAK_BEE_NEST, team);
+        if(team.isChallengeEnabled(game, ChallengeType.BREAK_BEE_NEST) && block.getType() == Material.BEE_NEST){
+
+            game.challenge(ChallengeType.BREAK_BEE_NEST, teamColor);
         }
     }
 
     @EventHandler
     public void onCraft(CraftItemEvent e){
         var game = instance.getGame();
-        var challenges = game.getChallenges();
         var item = e.getCurrentItem();
-        if(challenges.get(ChallengeType.CRAFT_RABBIT_STEW).getEnabled() && item != null && item.getType() == Material.RABBIT_STEW){
-            var player = (Player) e.getWhoClicked();
-            var name = player.getName();
-            var team = game.getPlayerTeam(name);
+
+        var name = e.getWhoClicked().getName();
+        var teamColor = game.getPlayerTeam(name);
+        var team = game.getTeams().get(teamColor);
+
+        if(team.isChallengeEnabled(game, ChallengeType.CRAFT_RABBIT_STEW) && item != null && item.getType() == Material.RABBIT_STEW){
+
+            game.challenge(ChallengeType.CRAFT_RABBIT_STEW, teamColor);
+
+        }else if(team.isChallengeEnabled(game, ChallengeType.CRAFT_END_CRYSTAL) && item != null && item.getType() == Material.END_CRYSTAL){
 
 
-            game.challenge(ChallengeType.CRAFT_RABBIT_STEW, team);
-
-        }else if(challenges.get(ChallengeType.CRAFT_END_CRYSTAL).getEnabled() && item != null && item.getType() == Material.END_CRYSTAL){
-            var player = (Player) e.getWhoClicked();
-            var name = player.getName();
-            var team = game.getPlayerTeam(name);
-
-
-            game.challenge(ChallengeType.CRAFT_END_CRYSTAL, team);
+            game.challenge(ChallengeType.CRAFT_END_CRYSTAL, teamColor);
         }
     }
 
     @EventHandler
     public void onEat(PlayerItemConsumeEvent e){
         var game = instance.getGame();
-        var challenges = game.getChallenges();
         var item = e.getItem();
-        if(challenges.get(ChallengeType.EAT_BEETROOT_ON_PIG).getEnabled()){
+
+        var name = e.getPlayer().getName();
+        var teamColor = game.getPlayerTeam(name);
+        var team = game.getTeams().get(teamColor);
+
+        if(team.isChallengeEnabled(game, ChallengeType.EAT_BEETROOT_ON_PIG)){
             var player = e.getPlayer();
             var check = player.getVehicle();
 
             if(check != null && check instanceof Pig){
                 if(item != null && item.getType() == Material.BEETROOT){
-                    var name = player.getName();
-                    var team = game.getPlayerTeam(name);
         
-        
-                    game.challenge(ChallengeType.EAT_BEETROOT_ON_PIG, team);
+                    game.challenge(ChallengeType.EAT_BEETROOT_ON_PIG, teamColor);
                 }
             }
             
@@ -88,16 +84,19 @@ public class HardListener implements Listener{
     @EventHandler
     public void kill(PlayerDeathEvent e){
         var game = instance.getGame();
-        var challenges = game.getChallenges();
 
-        var killer = e.getEntity().getKiller();
+        var killer = (Player) e.getEntity().getKiller();
 
-        if(challenges.get(ChallengeType.KILL_PLAYER).getEnabled() && killer != null){
 
-            var name = e.getEntity().getName();
-            var team = game.getPlayerTeam(name);
+        if(killer == null) return;
 
-            game.challenge(ChallengeType.KILL_PLAYER, team);
+        var name = killer.getName();
+        var teamColor = game.getPlayerTeam(name);
+        var team = game.getTeams().get(teamColor);
+
+        if(team.isChallengeEnabled(game, ChallengeType.KILL_PLAYER) && killer != null){
+
+            game.challenge(ChallengeType.KILL_PLAYER, teamColor);
 
         } 
     }

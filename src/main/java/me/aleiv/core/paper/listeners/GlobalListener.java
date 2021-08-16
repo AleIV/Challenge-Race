@@ -1,5 +1,9 @@
 package me.aleiv.core.paper.listeners;
 
+import java.util.Collections;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -17,15 +21,12 @@ import me.aleiv.core.paper.Frames;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.Game.TeamColor;
 import me.aleiv.core.paper.events.addPointsEvent;
-import me.aleiv.core.paper.utilities.fastInv.FastInv;
-import me.aleiv.core.paper.utilities.fastInv.ItemBuilder;
 import net.md_5.bungee.api.ChatColor;
+import us.jcedeno.libs.rapidinv.ItemBuilder;
 
 public class GlobalListener implements Listener {
 
     Core instance;
-
-    FastInv menu;
 
     public GlobalListener(Core instance) {
         this.instance = instance;
@@ -41,31 +42,40 @@ public class GlobalListener implements Listener {
     }
 
     public void updatePromo() {
+
+        var menu = instance.getGame().getMenu();
+
         var discord = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(1))
                 .name(ChatColor.of("#4a4eba") + "Discord").addLore(ChatColor.GREEN + "LOS ADMINS", ChatColor.WHITE + "https://discord.gg/qSEhmpaEdX").build();
         var spigot = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(3))
                 .name(ChatColor.of("#dfa126") + "Spigot").addLore(ChatColor.WHITE + "https://www.spigotmc.org/members/aleiv.374689/").build();
         var twitter = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(2))
-                .name(ChatColor.of("#26d2df") + "Twitter").addLore(ChatColor.of("#26d2df") + "Development: " + ChatColor.WHITE + "AleIV https://twitter.com/AleIVCR",
-                ChatColor.of("#26d2df") + "Art: " + ChatColor.WHITE + "Apocalix https://twitter.com/ApocalixDeLuque",
-                ChatColor.of("#26d2df") + "Animations: " + ChatColor.WHITE + "Yulh https://twitter.com/yulhfx").build();
+                .name(ChatColor.of("#3ac1cb") + "Twitter").addLore(ChatColor.of("#26d2df") + "Development: " + ChatColor.WHITE + "AleIV https://twitter.com/AleIVCR",
+                ChatColor.of("#3ac1cb") + "Art: " + ChatColor.WHITE + "Apocalix https://twitter.com/ApocalixDeLuque",
+                ChatColor.of("#3ac1cb") + "Animations: " + ChatColor.WHITE + "Yulh https://twitter.com/yulhfx").build();
 
         menu.setItem(47, discord, action -> {
             var player = (Player) action.getWhoClicked();
             player.sendMessage(ChatColor.of("#4a4eba") + "Discord: https://discord.gg/qSEhmpaEdX" );
+
+            sound(Sound.ENTITY_CHICKEN_EGG);
 
         });
 
         menu.setItem(49, spigot, action -> {
             var player = (Player) action.getWhoClicked();
             player.sendMessage(ChatColor.of("#dfa126") + "Spigot: https://www.spigotmc.org/members/aleiv.374689/" );
+
+            sound(Sound.ENTITY_CHICKEN_EGG);
         });
 
         menu.setItem(51, twitter, action -> {
             var player = (Player) action.getWhoClicked();
-            player.sendMessage(ChatColor.of("#26d2df") + "Development: " + ChatColor.WHITE + "AleIV https://twitter.com/AleIVCR");
-            player.sendMessage(ChatColor.of("#26d2df") + "Art: " + ChatColor.WHITE + "Apocalix https://twitter.com/ApocalixDeLuque");
-            player.sendMessage(ChatColor.of("#26d2df") + "Animations: " + ChatColor.WHITE + "Yulh https://twitter.com/yulhfx");
+            player.sendMessage(ChatColor.of("#3ac1cb") + "Development: " + ChatColor.WHITE + "AleIV https://twitter.com/AleIVCR");
+            player.sendMessage(ChatColor.of("#3ac1cb") + "Art: " + ChatColor.WHITE + "Apocalix https://twitter.com/ApocalixDeLuque");
+            player.sendMessage(ChatColor.of("#3ac1cb") + "Animations: " + ChatColor.WHITE + "Yulh https://twitter.com/yulhfx");
+
+            sound(Sound.ENTITY_CHICKEN_EGG);
 
         });
     }
@@ -76,11 +86,37 @@ public class GlobalListener implements Listener {
         updatePromo();
     }
 
+    public void sound(Sound sound){
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            var player = (Player) p;
+            player.playSound(player.getLocation(), sound, 1, 0.1f);
+
+        });
+    }
+
+    public void generateChallenges(){
+        var game = instance.getGame();
+        var road = game.getRoad();
+        var challenges = game.getChallenges();
+
+        var list = challenges.values().stream().collect(Collectors.toList());
+        Collections.shuffle(list);
+
+        road.clear();
+        list.forEach(ch ->{
+            road.add(ch.getType());
+        });
+
+    }
+
     public boolean startGame(){
         var game = instance.getGame();
         var red = game.getTeams().get(TeamColor.RED);
         var blue = game.getTeams().get(TeamColor.BLUE);
+
         if(!red.getPlayers().isEmpty() && !blue.getPlayers().isEmpty()){
+
+            generateChallenges();
 
             Bukkit.getOnlinePlayers().forEach(p ->{
                 var player = (Player) p;
@@ -92,7 +128,7 @@ public class GlobalListener implements Listener {
 
             });
 
-            game.setGameStage(GameStage.INGAME);
+            game.setGameStage(GameStage.STARTING);
 
             game.animation(1, Frames.getFramesCharsIntegers(108, 176));
 
@@ -100,9 +136,14 @@ public class GlobalListener implements Listener {
                 Bukkit.getOnlinePlayers().forEach(p ->{
                     var player = (Player) p;
                     player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
+
+                    game.setGameStage(GameStage.INGAME);
+
+                    game.viewChallenge(TeamColor.BLUE);
+                    game.viewChallenge(TeamColor.RED);
     
                 });
-            }, 20*4);
+            }, 20*3);
 
             return true;
         }else{
@@ -113,10 +154,7 @@ public class GlobalListener implements Listener {
     public void updateStart() {
 
         var game = instance.getGame();
-
-        var name = game.getN(-8) + ChatColor.WHITE + Character.toString('\uE004');
-
-        this.menu = new FastInv(6 * 9, name);
+        var menu = game.getMenu();
 
         var start = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(7))
                 .name(ChatColor.of("#37e91c") + "Click to start.").build();
@@ -126,9 +164,10 @@ public class GlobalListener implements Listener {
             var player = (Player) action.getWhoClicked();
 
             if(startGame()){
-
+                sound(Sound.ENTITY_CHICKEN_EGG);
                 player.closeInventory();
             }else{
+                sound(Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
                 player.sendMessage(ChatColor.RED + "The game can't start, the teams are not ready.");
                 player.closeInventory();
             }
@@ -138,9 +177,10 @@ public class GlobalListener implements Listener {
             var player = (Player) action.getWhoClicked();
 
             if(startGame()){
-
+                sound(Sound.ENTITY_CHICKEN_EGG);
                 player.closeInventory();
             }else{
+                sound(Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
                 player.sendMessage(ChatColor.RED + "The game can't start, the teams are not ready.");
                 player.closeInventory();
             }
@@ -150,9 +190,10 @@ public class GlobalListener implements Listener {
             var player = (Player) action.getWhoClicked();
 
             if(startGame()){
-
+                sound(Sound.ENTITY_CHICKEN_EGG);
                 player.closeInventory();
             }else{
+                sound(Sound.BLOCK_NOTE_BLOCK_DIDGERIDOO);
                 player.sendMessage(ChatColor.RED + "The game can't start, the teams are not ready.");
                 player.closeInventory();
             }
@@ -161,6 +202,9 @@ public class GlobalListener implements Listener {
     }
 
     public void updateTeams() {
+
+        var menu = instance.getGame().getMenu();
+
         var red = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(4))
                 .name(ChatColor.of("#e91c1c") + "Join red team.");
         var blue = new ItemBuilder(Material.PAPER).meta(ItemMeta.class, meta -> meta.setCustomModelData(5))
@@ -174,13 +218,22 @@ public class GlobalListener implements Listener {
         var redPlayers = redTeam.getPlayers();
         var bluePlayers = blueTeam.getPlayers();
 
+        var redBuilder = new StringBuilder();
+        
         redPlayers.forEach(r ->{
-            red.addLore(ChatColor.WHITE + "" + r);
+            redBuilder.append(ChatColor.WHITE + "" + r + "\n");
         });
 
+        red.lore(redBuilder.toString());
+
+
+        var blueBuilder = new StringBuilder();
+
         bluePlayers.forEach(b ->{
-            red.addLore(ChatColor.WHITE + "" + b);
+            blueBuilder.append(ChatColor.WHITE + "" + b + "\n");
         });
+
+        blue.lore(blueBuilder.toString());
 
         menu.setItem(18, red.build(), action -> {
             var player = (Player) action.getWhoClicked();
@@ -197,13 +250,17 @@ public class GlobalListener implements Listener {
                 }
             }
 
+            updateTeams();
+            sound(Sound.ENTITY_CHICKEN_EGG);
+            player.sendMessage(game.getColorRED() + "Joined team red.");
+
         });
 
         menu.setItem(26, blue.build(), action -> {
             var player = (Player) action.getWhoClicked();
 
             var name = player.getName();
-            
+
             if(redPlayers.contains(name)){
                 redPlayers.remove(name);
                 bluePlayers.add(name);
@@ -214,10 +271,11 @@ public class GlobalListener implements Listener {
                 }
             }
             
-            player.sendMessage();
+            updateTeams();
+            sound(Sound.ENTITY_CHICKEN_EGG);
+            player.sendMessage(game.getColorBLUE() + "Joined team blue.");
         });
     }
-
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -243,12 +301,14 @@ public class GlobalListener implements Listener {
     @EventHandler
     public void onPoint(PlayerInteractEvent e) {
 
-        if (e.getItem() == null)
-            return;
-
-        var mat = e.getItem().getType();
         var game = instance.getGame();
         var player = e.getPlayer();
+
+        if (e.getItem() == null){
+            return;
+        }
+
+        var mat = e.getItem().getType();
 
         if(player.getGameMode() != GameMode.CREATIVE) return;
 
@@ -268,9 +328,6 @@ public class GlobalListener implements Listener {
             } else if (mat == Material.RED_WOOL) {
                 game.addPoint(TeamColor.RED);
 
-            } else if (mat == Material.GREEN_WOOL) {
-                menu.open(player);
-
             }
         }
 
@@ -286,24 +343,29 @@ public class GlobalListener implements Listener {
             switch (color) {
                 case RED: {
 
-                    game.animation(4, Frames.getFramesCharsIntegers(10, 57));
+                    game.animation(3, Frames.getFramesCharsIntegers(10, 57));
                     Bukkit.getOnlinePlayers().forEach(p ->{
                         var player = (Player) p;
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1, 1);
         
                     });
+
+                    game.resetGame();
+                    
 
                 }
                     break;
 
                 case BLUE: {
 
-                    game.animation(4, Frames.getFramesCharsIntegers(59, 107));
+                    game.animation(3, Frames.getFramesCharsIntegers(59, 107));
                     Bukkit.getOnlinePlayers().forEach(p ->{
                         var player = (Player) p;
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_DEATH, 1, 1);
         
                     });
+
+                    game.resetGame();
 
                 }
                     break;
@@ -312,6 +374,7 @@ public class GlobalListener implements Listener {
                     break;
             }
         }
+
     }
 
 }

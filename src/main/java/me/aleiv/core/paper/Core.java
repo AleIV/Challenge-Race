@@ -15,7 +15,7 @@ import me.aleiv.core.paper.listeners.GlobalListener;
 import me.aleiv.core.paper.listeners.HardListener;
 import me.aleiv.core.paper.listeners.LobbyListener;
 import me.aleiv.core.paper.listeners.MediumListener;
-import me.aleiv.core.paper.utilities.fastInv.FastInvManager;
+import us.jcedeno.libs.rapidinv.RapidInvManager;
 
 public class Core extends JavaPlugin {
 
@@ -32,8 +32,9 @@ public class Core extends JavaPlugin {
         game.runTaskTimerAsynchronously(this, 0L, 20L);
 
         taskChainFactory = BukkitTaskChainFactory.create(this);
-        FastInvManager.register(this);
 
+        RapidInvManager.register(this);
+        
         //LISTENERS
 
         Bukkit.getPluginManager().registerEvents(new GlobalListener(this), this);
@@ -41,7 +42,6 @@ public class Core extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EasyListener(this), this);
         Bukkit.getPluginManager().registerEvents(new MediumListener(this), this);
         Bukkit.getPluginManager().registerEvents(new HardListener(this), this);
-
 
         //COMMANDS
         

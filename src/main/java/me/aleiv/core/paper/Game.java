@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
@@ -22,6 +23,8 @@ import me.aleiv.core.paper.events.addPointsEvent;
 import me.aleiv.core.paper.events.removePointsEvent;
 import me.aleiv.core.paper.objects.Challenge;
 import me.aleiv.core.paper.objects.Team;
+import net.md_5.bungee.api.ChatColor;
+import us.jcedeno.libs.rapidinv.RapidInv;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -32,6 +35,7 @@ public class Game extends BukkitRunnable {
     long startTime = 0;
 
     HashMap<ChallengeType, Challenge> challenges = new HashMap<>();
+    
     HashMap<TeamColor, Team> teams = new HashMap<>();
 
     HashMap<Integer, String> negativeSpaces = new HashMap<>();
@@ -55,6 +59,14 @@ public class Game extends BukkitRunnable {
     int fix = 35;
     int middleFix = 0;
 
+    String colorRED = ChatColor.of("#e91c1c") + "";
+    String colorBLUE = ChatColor.of("#1c22e9") + "";
+
+    RapidInv menu;
+
+    List<ChallengeType> road = new ArrayList<>();
+    int nRoad = 0;
+     
     public enum ChallengeType {
 
         //EASY MODE
@@ -109,9 +121,13 @@ public class Game extends BukkitRunnable {
 
         registerCodes();
 
+        var name = getN(-8) + ChatColor.WHITE + Character.toString('\uE004');
+
+        this.menu = new RapidInv(6 * 9, name);
+
         //CHALLENGES
 
-        //EASY TODO Cambiar el idioma a iglés.
+        //EASY 
         challenges.put(ChallengeType.FISH, new Challenge(ChallengeType.FISH, Difficulty.EASY, "Pesca un pez.")); //OK
         challenges.put(ChallengeType.BREAK_HOE, new Challenge(ChallengeType.BREAK_HOE, Difficulty.EASY, "Rompe una azada de madera.")); //OK
         challenges.put(ChallengeType.CRAFT_PAINTING, new Challenge(ChallengeType.CRAFT_PAINTING, Difficulty.EASY, "Craftea un cuadro.")); //OK
@@ -129,7 +145,7 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.EAT_ROTTEN_FLESH, new Challenge(ChallengeType.EAT_ROTTEN_FLESH, Difficulty.EASY, "Come carne podrida."));//OK
         challenges.put(ChallengeType.PUT_CHEST_DONKEY, new Challenge(ChallengeType.PUT_CHEST_DONKEY, Difficulty.EASY, "Pon un cofre en un burro."));//OK
 
-        //MEDIUM TODO Cambiar el idioma a iglés.
+        //MEDIUM 
         challenges.put(ChallengeType.TRADE_VILLAGER, new Challenge(ChallengeType.TRADE_VILLAGER, Difficulty.EASY, "Tradea con un aldeano."));//OK
         challenges.put(ChallengeType.HIGH_LIMIT, new Challenge(ChallengeType.HIGH_LIMIT, Difficulty.MEDIUM, "Sube a la altura máxima."));//OK
         challenges.put(ChallengeType.CREATE_NETHER_PORTAL, new Challenge(ChallengeType.CREATE_NETHER_PORTAL, Difficulty.MEDIUM, "Crea un portal al nether."));//OK
@@ -138,18 +154,43 @@ public class Game extends BukkitRunnable {
         challenges.put(ChallengeType.KILL_IRON_GOLEM, new Challenge(ChallengeType.KILL_IRON_GOLEM, Difficulty.MEDIUM, "Mata un iron golem."));//OK
         challenges.put(ChallengeType.EAT_GOLDEN_APPLE, new Challenge(ChallengeType.EAT_GOLDEN_APPLE, Difficulty.MEDIUM, "Come una golden apple."));//OK
         challenges.put(ChallengeType.SLEEP_IN_NETHER, new Challenge(ChallengeType.SLEEP_IN_NETHER, Difficulty.MEDIUM, "Duerme en el nether."));//OK
-
-        //HARD TODO Cambiar el idioma a iglés.
         challenges.put(ChallengeType.BREAK_BEE_NEST, new Challenge(ChallengeType.BREAK_BEE_NEST, Difficulty.HARD, "Rompe un panal de abejas."));//OK
+
+        //HARD 
         challenges.put(ChallengeType.CRAFT_RABBIT_STEW, new Challenge(ChallengeType.CRAFT_RABBIT_STEW, Difficulty.HARD, "Craftea un estofado de conejo."));//OK
         challenges.put(ChallengeType.CRAFT_END_CRYSTAL, new Challenge(ChallengeType.CRAFT_END_CRYSTAL, Difficulty.HARD, "Craftea un end crystal."));//OK
         challenges.put(ChallengeType.EAT_BEETROOT_ON_PIG, new Challenge(ChallengeType.EAT_BEETROOT_ON_PIG, Difficulty.HARD, "Come un rábano encima de un cerdo.")); //OK
         challenges.put(ChallengeType.KILL_PLAYER, new Challenge(ChallengeType.KILL_PLAYER, Difficulty.HARD, "Mata a un jugador."));//OK
-
-        challenges.values().forEach(chall -> {
-            chall.setEnabled(true);
-        });
         
+    }
+
+    public void viewChallenge(TeamColor color){
+        var game = instance.getGame();
+        var team = teams.get(color);
+
+        var nRoad = team.getRoad();
+        var road = game.getRoad();
+
+        var current = road.get(nRoad);
+        var challenge = challenges.get(current);
+
+        var players = team.getPlayers();
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            players.forEach(p2 ->{
+                var p1 = (Player) p;
+                if(p1.getName() == p2){
+                    if(color == TeamColor.RED){
+                        p.sendMessage(colorRED + "[NEW CHALLENGE] " + ChatColor.WHITE + "[" + challenge.getDescription() + "]");
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 1, 1);
+
+                    }else if(color == TeamColor.BLUE){
+                        p.sendMessage(colorBLUE + "[NEW CHALLENGE] " + ChatColor.WHITE + "[" + challenge.getDescription() + "]");
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 1, 1);
+                    }
+                }
+            });
+        });
+
     }
 
     public void updateBossBar(){
@@ -281,6 +322,14 @@ public class Game extends BukkitRunnable {
 
     }
 
+    public void sound(Sound sound){
+        Bukkit.getOnlinePlayers().forEach(p ->{
+            var player = (Player) p;
+            player.playSound(player.getLocation(), sound, 1, 0.1f);
+
+        });
+    }
+
     public void challenge(ChallengeType challenge, TeamColor color){
 
         var chain = Core.newChain();
@@ -288,13 +337,78 @@ public class Game extends BukkitRunnable {
         for (int i = 0; i < 6; i++) {
             chain.delay(1).sync(() -> {
                 addPoint(color);
-
+                sound(Sound.BLOCK_FIRE_EXTINGUISH);
             });
         }
     
         chain.sync(TaskChain::abort).execute();
 
-        Bukkit.broadcastMessage(challenge + " -> " + color.toString());
+        switch (color) {
+            case RED:{
+                Bukkit.broadcastMessage(colorRED + "Red team did a challenge!");
+
+                sound(Sound.BLOCK_NOTE_BLOCK_BELL);
+
+            }break;
+
+            case BLUE:{
+
+                Bukkit.broadcastMessage(colorBLUE + "Blue team did a challenge!");
+                
+                sound(Sound.BLOCK_NOTE_BLOCK_BELL);
+            }break;
+        
+            default:
+                break;
+        }
+
+        var team = teams.get(color);
+        team.setRoad(team.getRoad()+1);
+        
+        Bukkit.getScheduler().runTaskLater(instance, task ->{
+            if(team.getPoints() < 114)
+                viewChallenge(color);
+        
+        }, 20*5);
+
+    }
+
+    public void resetGame(){
+        var game = instance.getGame();
+        Bukkit.getScheduler().runTaskLater(instance, task ->{
+            game.setGameStage(GameStage.LOBBY);
+
+            Bukkit.getOnlinePlayers().forEach(p ->{
+                var player = (Player) p;
+                var loc = Bukkit.getWorld("world").getSpawnLocation();
+                player.teleport(loc);
+                player.setHealth(20);
+                player.setSaturation(20);
+                player.setGameMode(GameMode.SURVIVAL);
+
+            });
+
+            var chain = Core.newChain();
+
+            for (int i = 0; i < 114; i++) {
+                chain.delay(1).sync(() -> {
+                    removePoint(TeamColor.RED);
+                    removePoint(TeamColor.BLUE);
+                });
+            }
+    
+            chain.sync(TaskChain::abort).execute();
+
+            var red = game.getTeams().get(TeamColor.RED);
+            var blue = game.getTeams().get(TeamColor.BLUE);
+
+            red.setRoad(0);
+            blue.setRoad(0);
+
+        }, 20*11);
+
+
+
     }
 
     public TeamColor getPlayerTeam(String name){
@@ -358,7 +472,7 @@ public class Game extends BukkitRunnable {
     }
 
     public enum GameStage {
-        LOBBY, INGAME
+        LOBBY, INGAME, STARTING
     }
 
     public enum Difficulty{
