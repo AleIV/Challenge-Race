@@ -56,7 +56,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.FISH) && fish instanceof Item){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.FISH) && fish instanceof Item){
             var item = (Item) fish;
             var type = item.getItemStack().getType();
 
@@ -80,7 +80,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.BREAK_HOE) && item.getType().equals(Material.WOODEN_HOE)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.BREAK_HOE) && item.getType().equals(Material.WOODEN_HOE)) {
 
 
             game.challenge(ChallengeType.BREAK_HOE, teamColor);
@@ -102,15 +102,15 @@ public class EasyListener implements Listener{
         var team = game.getTeams().get(teamColor);
 
 
-        if (team.isChallengeEnabled(game, ChallengeType.CRAFT_PAINTING) && item.getType().equals(Material.PAINTING)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.CRAFT_PAINTING) && item.getType().equals(Material.PAINTING)) {
 
             game.challenge(ChallengeType.CRAFT_PAINTING, teamColor);
 
-        } else if (team.isChallengeEnabled(game, ChallengeType.CRAFT_POT) && item.getType().equals(Material.FLOWER_POT)) {
+        } else if (team != null && team.isChallengeEnabled(game, ChallengeType.CRAFT_POT) && item.getType().equals(Material.FLOWER_POT)) {
 
             game.challenge(ChallengeType.CRAFT_POT, teamColor);
 
-        } else if (team.isChallengeEnabled(game, ChallengeType.CRAFT_DIAMOND_SHOVEL) && item.getType().equals(Material.DIAMOND_SHOVEL)) {
+        } else if (team != null && team.isChallengeEnabled(game, ChallengeType.CRAFT_DIAMOND_SHOVEL) && item.getType().equals(Material.DIAMOND_SHOVEL)) {
 
             game.challenge(ChallengeType.CRAFT_DIAMOND_SHOVEL, teamColor);
 
@@ -131,7 +131,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.JUMP_BED) && block.getType().toString().contains("BED")) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.JUMP_BED) && block.getType().toString().contains("BED")) {
 
 
             game.challenge(ChallengeType.JUMP_BED, teamColor);
@@ -153,12 +153,12 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.PAINT_SHEEP) && entity instanceof Sheep
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.PAINT_SHEEP) && entity instanceof Sheep
                 && player.getInventory().getItemInMainHand().getType().equals(Material.PURPLE_DYE)) {
 
             game.challenge(ChallengeType.PAINT_SHEEP, teamColor);
 
-        } else if (team.isChallengeEnabled(game, ChallengeType.PUT_CHEST_DONKEY) && entity instanceof Donkey
+        } else if (team != null && team.isChallengeEnabled(game, ChallengeType.PUT_CHEST_DONKEY) && entity instanceof Donkey
                 && player.getInventory().getItemInMainHand().getType().equals(Material.CHEST)) {
             var donkey = (Donkey) entity;
             if(donkey.isTamed()){
@@ -184,7 +184,7 @@ public class EasyListener implements Listener{
         var team = game.getTeams().get(teamColor);
 
 
-        if (team.isChallengeEnabled(game, ChallengeType.BREAK_IRON_ORE) && block.getType().equals(Material.IRON_ORE)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.BREAK_IRON_ORE) && block.getType().equals(Material.IRON_ORE)) {
 
 
             game.challenge(ChallengeType.BREAK_IRON_ORE, teamColor);
@@ -206,15 +206,15 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.EAT_APPLE) && item.getType().equals(Material.APPLE)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.EAT_APPLE) && item.getType().equals(Material.APPLE)) {
 
             game.challenge(ChallengeType.EAT_APPLE, teamColor);
 
-        } else if (team.isChallengeEnabled(game, ChallengeType.EAT_DRY_KELP) && item.getType().equals(Material.DRIED_KELP)) {
+        } else if (team != null && team.isChallengeEnabled(game, ChallengeType.EAT_DRY_KELP) && item.getType().equals(Material.DRIED_KELP)) {
 
             game.challenge(ChallengeType.EAT_DRY_KELP, teamColor);
 
-        } else if (team.isChallengeEnabled(game, ChallengeType.EAT_ROTTEN_FLESH) && item.getType().equals(Material.ROTTEN_FLESH)) {
+        } else if (team != null && team.isChallengeEnabled(game, ChallengeType.EAT_ROTTEN_FLESH) && item.getType().equals(Material.ROTTEN_FLESH)) {
 
             game.challenge(ChallengeType.EAT_ROTTEN_FLESH, teamColor);
 
@@ -238,7 +238,7 @@ public class EasyListener implements Listener{
             var teamColor = game.getPlayerTeam(name);
             var team = game.getTeams().get(teamColor);
 
-            if (team.isChallengeEnabled(game, ChallengeType.CACTUS_DAMAGE) && e.getCause().equals(EntityDamageEvent.DamageCause.CONTACT)) {
+            if (team != null && team.isChallengeEnabled(game, ChallengeType.CACTUS_DAMAGE) && e.getCause().equals(EntityDamageEvent.DamageCause.CONTACT)) {
 
                 if (entityTouchesCactus(entity)) {
 
@@ -263,7 +263,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.BREED_SHEEPS) && e.getEntity() instanceof Sheep) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.BREED_SHEEPS) && e.getEntity() instanceof Sheep) {
 
             game.challenge(ChallengeType.BREED_SHEEPS, teamColor);
 
@@ -283,7 +283,7 @@ public class EasyListener implements Listener{
                 var teamColor = game.getPlayerTeam(name);
                 var team = game.getTeams().get(teamColor);
 
-                if(team.isChallengeEnabled(game, ChallengeType.HIGH_LIMIT) && loc.getY() >= 255){
+                if(team != null && team.isChallengeEnabled(game, ChallengeType.HIGH_LIMIT) && loc.getY() >= 255){
 
                     game.challenge(ChallengeType.HIGH_LIMIT, teamColor);
                 }
@@ -303,7 +303,7 @@ public class EasyListener implements Listener{
             var teamColor = game.getPlayerTeam(name);
             var team = game.getTeams().get(teamColor);
 
-            if (team.isChallengeEnabled(game, ChallengeType.SWIMM_DOLPHIN) && e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.DOLPHINS_GRACE)) {
+            if (team != null && team.isChallengeEnabled(game, ChallengeType.SWIMM_DOLPHIN) && e.getNewEffect() != null && e.getNewEffect().getType().equals(PotionEffectType.DOLPHINS_GRACE)) {
 
                 if (e.getCause().equals(EntityPotionEffectEvent.Cause.DOLPHIN)) {
 
@@ -328,7 +328,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.TRADE_VILLAGER) && e.getView().getTopInventory() instanceof MerchantInventory) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.TRADE_VILLAGER) && e.getView().getTopInventory() instanceof MerchantInventory) {
 
             MerchantInventory inv = (MerchantInventory) e.getView().getTopInventory();
             if (!inv.equals(e.getClickedInventory())) return;
@@ -353,7 +353,7 @@ public class EasyListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.THROW_EGG)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.THROW_EGG)) {
 
             game.challenge(ChallengeType.THROW_EGG, teamColor);
 

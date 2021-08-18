@@ -34,7 +34,7 @@ public class MediumListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.CREATE_NETHER_PORTAL) && player != null) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.CREATE_NETHER_PORTAL) && player != null) {
 
             game.challenge(ChallengeType.CREATE_NETHER_PORTAL, teamColor);
         }
@@ -51,7 +51,7 @@ public class MediumListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.SLEEP_IN_NETHER) && cause.contains("Intentional")){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.SLEEP_IN_NETHER) && cause.contains("Intentional")){
 
             game.challenge(ChallengeType.SLEEP_IN_NETHER, teamColor);
 
@@ -71,11 +71,11 @@ public class MediumListener implements Listener{
             var teamColor = game.getPlayerTeam(name);
             var team = game.getTeams().get(teamColor);
 
-            if (team.isChallengeEnabled(game, ChallengeType.KILL_STRIDER) && entity instanceof Strider)  {
+            if (team != null && team.isChallengeEnabled(game, ChallengeType.KILL_STRIDER) && entity instanceof Strider)  {
     
                 game.challenge(ChallengeType.KILL_STRIDER, teamColor);
     
-            }else if (team.isChallengeEnabled(game, ChallengeType.KILL_IRON_GOLEM) && entity instanceof IronGolem ) {
+            }else if (team != null && team.isChallengeEnabled(game, ChallengeType.KILL_IRON_GOLEM) && entity instanceof IronGolem ) {
     
     
                 game.challenge(ChallengeType.KILL_IRON_GOLEM, teamColor);
@@ -95,7 +95,7 @@ public class MediumListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.GROW_TREE_IN_NETHER) && player != null && player.getWorld().getEnvironment() == Environment.NETHER){
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.GROW_TREE_IN_NETHER) && player != null && player.getWorld().getEnvironment() == Environment.NETHER){
 
             game.challenge(ChallengeType.GROW_TREE_IN_NETHER, teamColor);
 
@@ -116,7 +116,7 @@ public class MediumListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if (team.isChallengeEnabled(game, ChallengeType.EAT_GOLDEN_APPLE) && item.getType().equals(Material.GOLDEN_APPLE)) {
+        if (team != null && team.isChallengeEnabled(game, ChallengeType.EAT_GOLDEN_APPLE) && item.getType().equals(Material.GOLDEN_APPLE)) {
 
             game.challenge(ChallengeType.EAT_GOLDEN_APPLE, teamColor);
 

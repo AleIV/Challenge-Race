@@ -30,7 +30,7 @@ public class HardListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.BREAK_BEE_NEST) && block.getType() == Material.BEE_NEST){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.BREAK_BEE_NEST) && block.getType() == Material.BEE_NEST){
 
             game.challenge(ChallengeType.BREAK_BEE_NEST, teamColor);
         }
@@ -45,11 +45,11 @@ public class HardListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.CRAFT_RABBIT_STEW) && item != null && item.getType() == Material.RABBIT_STEW){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.CRAFT_RABBIT_STEW) && item != null && item.getType() == Material.RABBIT_STEW){
 
             game.challenge(ChallengeType.CRAFT_RABBIT_STEW, teamColor);
 
-        }else if(team.isChallengeEnabled(game, ChallengeType.CRAFT_END_CRYSTAL) && item != null && item.getType() == Material.END_CRYSTAL){
+        }else if(team != null && team.isChallengeEnabled(game, ChallengeType.CRAFT_END_CRYSTAL) && item != null && item.getType() == Material.END_CRYSTAL){
 
 
             game.challenge(ChallengeType.CRAFT_END_CRYSTAL, teamColor);
@@ -65,7 +65,7 @@ public class HardListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.EAT_BEETROOT_ON_PIG)){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.EAT_BEETROOT_ON_PIG)){
             var player = e.getPlayer();
             var check = player.getVehicle();
 
@@ -94,7 +94,7 @@ public class HardListener implements Listener{
         var teamColor = game.getPlayerTeam(name);
         var team = game.getTeams().get(teamColor);
 
-        if(team.isChallengeEnabled(game, ChallengeType.KILL_PLAYER) && killer != null){
+        if(team != null && team.isChallengeEnabled(game, ChallengeType.KILL_PLAYER) && killer != null){
 
             game.challenge(ChallengeType.KILL_PLAYER, teamColor);
 

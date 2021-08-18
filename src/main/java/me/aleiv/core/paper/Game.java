@@ -369,7 +369,7 @@ public class Game extends BukkitRunnable {
             if(team.getPoints() < 114)
                 viewChallenge(color);
         
-        }, 20*5);
+        }, 20*3);
 
     }
 
