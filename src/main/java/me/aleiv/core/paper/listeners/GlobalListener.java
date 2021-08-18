@@ -135,13 +135,13 @@ public class GlobalListener implements Listener {
                 Bukkit.getOnlinePlayers().forEach(p ->{
                     var player = (Player) p;
                     player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
-
-                    game.setGameStage(GameStage.INGAME);
-
-                    game.viewChallenge(TeamColor.BLUE);
-                    game.viewChallenge(TeamColor.RED);
     
                 });
+
+                game.setGameStage(GameStage.INGAME);
+                game.viewChallenge(TeamColor.BLUE);
+                game.viewChallenge(TeamColor.RED);
+                
             }, 20*3);
 
             return true;
