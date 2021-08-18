@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.aleiv.core.paper.Core;
 import me.aleiv.core.paper.Frames;
+import me.aleiv.core.paper.Game.Difficulty;
 import me.aleiv.core.paper.Game.GameStage;
 import me.aleiv.core.paper.Game.TeamColor;
 import me.aleiv.core.paper.events.addPointsEvent;
@@ -99,10 +100,22 @@ public class GlobalListener implements Listener {
         var challenges = game.getChallenges();
 
         var list = challenges.values().stream().collect(Collectors.toList());
-        Collections.shuffle(list);
+        var easy = list.stream().filter(ch -> ch.getDifficulty() == Difficulty.EASY).collect(Collectors.toList());
+        var medium = list.stream().filter(ch -> ch.getDifficulty() == Difficulty.MEDIUM).collect(Collectors.toList());
+        var hard = list.stream().filter(ch -> ch.getDifficulty() == Difficulty.HARD).collect(Collectors.toList());
+
+        Collections.shuffle(easy);
+        Collections.shuffle(medium);
+        Collections.shuffle(hard);
 
         road.clear();
-        list.forEach(ch ->{
+        easy.forEach(ch ->{
+            road.add(ch.getType());
+        });
+        medium.forEach(ch ->{
+            road.add(ch.getType());
+        });
+        hard.forEach(ch ->{
             road.add(ch.getType());
         });
 
@@ -141,6 +154,7 @@ public class GlobalListener implements Listener {
                 game.setGameStage(GameStage.INGAME);
                 game.viewChallenge(TeamColor.BLUE);
                 game.viewChallenge(TeamColor.RED);
+                game.updateBossBar();
                 
             }, 20*3);
 

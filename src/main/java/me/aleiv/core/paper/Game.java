@@ -107,6 +107,22 @@ public class Game extends BukkitRunnable {
 
     }
 
+    public void bossbarLobby(){
+        bossBar.setTitle(Character.toString('\uE058') + "");
+    }
+
+    public void updateBossBar(){
+        var blueTeam = teams.get(TeamColor.BLUE);
+        var redTeam = teams.get(TeamColor.RED);
+
+        var rP = redTeam.getPoints();
+        var bP = blueTeam.getPoints();
+        var negRed = rP == 0 ? "" : getN(rP);
+        var negBlue = bP == 0 ? "" : getN(bP);
+
+        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank1 + getN(blueBlank) + blank2 + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
+    }
+
     public Game(Core instance) {
         this.instance = instance;
         this.startTime = System.currentTimeMillis();
@@ -116,7 +132,7 @@ public class Game extends BukkitRunnable {
 
         gameStage = GameStage.LOBBY;
 
-        bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-raid"), Character.toString('\uE058') + "", BarColor.BLUE, BarStyle.SOLID);
+        bossBar = Bukkit.createBossBar(new NamespacedKey(instance, "boss-race"), Character.toString('\uE058') + "", BarColor.BLUE, BarStyle.SOLID);
         bossBar.setVisible(true);
 
         registerCodes();
@@ -191,18 +207,6 @@ public class Game extends BukkitRunnable {
             });
         });
 
-    }
-
-    public void updateBossBar(){
-        var blueTeam = teams.get(TeamColor.BLUE);
-        var redTeam = teams.get(TeamColor.RED);
-
-        var rP = redTeam.getPoints();
-        var bP = blueTeam.getPoints();
-        var negRed = rP == 0 ? "" : getN(rP);
-        var negBlue = bP == 0 ? "" : getN(bP);
-
-        bossBar.setTitle(getN(fix) + bar + getN(redBlank) + blank1 + getN(blueBlank) + blank2 + getN(redPerm) + negRed + red + getN(middleFix) + getN(bluePerm) + negBlue + blue);
     }
 
     public void addPoint(TeamColor teamColor){
@@ -404,6 +408,7 @@ public class Game extends BukkitRunnable {
 
             red.setRoad(0);
             blue.setRoad(0);
+            game.bossbarLobby();
 
         }, 20*11);
 
